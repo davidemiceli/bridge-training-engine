@@ -1,15 +1,22 @@
 <p align="center">
-  <a href="https://github.com/davidemiceli/bridge" target="_blank" rel="noopener noreferrer">
-    <img src="assets/logo.png" alt="Bridge Training Engine">
+  <a href="https://github.com/davidemiceli/bridge-training-engine" target="_blank" rel="noopener noreferrer">
+    <img src="assets/img/logo.png" alt="Bridge Training Engine">
   </a>
 </p>
 <h1 align="center">Bridge Training Engine</h1>
 
 A Free and Open Source platform for Bridge training.
 
+
 ## Getting Started
 
-To start the application, run the Bridge Engine server.
+### Requirements
+
+- Node.js v16.14+
+
+### Run application
+
+To start the application, run:
 
 ```shell
 # Install FE JavaScript requirements
