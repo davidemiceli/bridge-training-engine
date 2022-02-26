@@ -3,10 +3,8 @@
     <img src="assets/img/logo.png" alt="Bridge Training Engine">
   </a>
 </p>
-<h1 align="center">Bridge Training Engine</h1>
-
-A Free and Open Source platform for Bridge training.
-
+<h2 align="center">Bridge Training Engine</h2>
+<p align="center"><em>A Free and Open Source platform for Bridge training.</em></p>
 
 ## Getting Started
 
