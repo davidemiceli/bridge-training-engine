@@ -1,0 +1,178 @@
+/*
+  Custom generic styles
+*/
+
+@font-face {
+  font-family: "CardPlaySans";
+  src: url(/DejaVuLGCSans.ttf) format("truetype");
+}
+
+html, body {
+  margin-top: 0px !important;
+  font-family: 'Roboto Condensed', sans-serif;
+  margin-bottom: 20px;
+}
+
+.landing-font {
+  font-family: "Fira Code", sans-serif;
+  /* font-family: 'Source Serif Pro', serif; */
+}
+
+.landing-subtitle {
+  line-height: 1.8;
+}
+
+.content-font {
+  font-family: 'Roboto', sans-serif;
+}
+
+button, input, optgroup, select, textarea {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.input, .select select, .textarea {
+  background-color: #f5f5f5;
+  /* border-color: rgb(10 10 10 / 10%); */
+  /* border-radius: 4px; */
+  border: 0;
+}
+
+/* For Vue.js to hide brackets on startup of page */
+[v-cloak], .v-cloak {
+  display: none !important;
+}
+
+.bg-light-white {
+  font-family: 'Staatliches', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  background-color: #ffffff !important;
+  border: 0;
+}
+
+.navbar-border {
+  border-bottom: 1px solid #ddd;
+}
+
+/* To fix the text align with material google icons */
+.material-icons {
+  vertical-align: middle;
+}
+
+a {
+  color: hsl(0, 0%, 20%);
+}
+a:focus, a:hover {
+  color: hsl(0, 0%, 40%);
+  text-decoration: none;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.footer-link {
+  color: hsl(0, 0%, 29%);
+}
+
+.navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+  color: hsl(0, 0%, 40%);
+}
+
+.navbar-link:not(.is-arrowless):after {
+  border-color: hsl(0, 0%, 20%);
+}
+
+.button.is-focused:not(:active), .button:focus:not(:active) {
+  box-shadow: 0 0 0 0.125em rgb(84 84 84 / 25%);
+}
+
+.button.is-focused, .button:focus {
+  border-color: #000;
+  color: #363636;
+}
+
+.card-button-red {
+  background-color: transparent;
+  border-color: #f40009;
+  color: #f40009;
+}
+
+.card-button-red:hover, .card-button-red.is-focused, .card-button-red:focus, .card-button-red:active, .card-button-red:visited,
+.card-button-red.is-focused:not(:active), .card-button-red:focus:not(:active) {
+  background-color: #f40009;
+  border-color: #f40009;
+  color: #ffffff;
+}
+
+.card-invisible {
+  color: rgba(30, 30, 30, 0);
+}
+
+.card-suit {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.card-shape {
+  font-family: 'CardPlaySans', sans-serif;
+}
+
+.card-red, .card-red:focus {
+  color: #f40009 !important;
+}
+.card-red-svg {
+  fill: #f40009 !important;
+}
+
+.card-black {
+  color: #1e1e1e;
+}
+.card-black-svg {
+  fill: #1e1e1e;
+}
+
+.card-text-clickable:hover {
+  color: #5d5d5d
+}
+
+.west, .east, .east-west {
+  color: #1d72aa;
+}
+
+.south, .north, .north-south {
+  color: #35aa1d;
+}
+
+.light-shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+}
+
+.light-shadow:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+  border-radius: 5px;
+}
+
+.m-t-60 { margin-top: 60px; }
+.m-t-70 { margin-top: 70px; }
+.m-t-80 { margin-top: 80px; }
+.m-t-100 { margin-top: 100px; }
+
+.box {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+}
+.panel {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+}
+
+.table-row-selected {
+  background-color: #e3e3e3 !important;
+}
+
+.progress.is-super-small {
+  height: 0.2rem;
+}

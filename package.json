@@ -1,0 +1,18 @@
+{
+  "name": "bridge-training-engine",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/toast": "^3.3.1",
+    "bulma": "^0.9.3",
+    "core-js": "^3.20.2",
+    "moment": "^2.29.1",
+    "nuxt": "^2.15.8"
+  }
+}
