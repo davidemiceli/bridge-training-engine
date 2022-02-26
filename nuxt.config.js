@@ -8,6 +8,10 @@ export default {
     base: '/bridge-training-engine/'
   },
 
+  static: {
+    prefix: false
+  },
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'Bridge Training Engine',

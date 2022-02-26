@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="column has-text-centered">
-                <img src="/playground.png" style="width: 560px;">
+                <img src="playground.png" style="width: 560px;">
             </div>
         </div>
         <hr class="hr">
