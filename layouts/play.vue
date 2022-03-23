@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <TheNavbar class="landing-font" :withMenu='false' />
-        <Nuxt />
+        <TheNavbar class="is-fixed-top bg-light-white navbar-border" :withMenu='true' />
+        <Nuxt class="m-t-70" />
     </div>
 </template>
 
