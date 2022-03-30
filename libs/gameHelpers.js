@@ -93,6 +93,10 @@ class GameHelpers {
         }, [player_id]);
     }
 
+    getNextPlayer(player_id) {
+        return player_nexts[player_id];
+    }
+
     bidTrumps() {
         return Object.keys(suit_symbols);
     }
@@ -390,6 +394,10 @@ class GameHelpers {
             }
         });
         return [contract, cards];
+    }
+
+    loopNextPlayer(player_id) {
+        return this.loopPlayers(player_id);
     }
 };
   

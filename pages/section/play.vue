@@ -33,20 +33,20 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                             <div class="dropdown-content has-text-left is-vcentered">
-                                <a href="#" class="dropdown-item" @click="playUndo"><span class="material-icons is-size-5 mr-2">replay</span> Undo last action</a>
-                                <a href="#" class="dropdown-item" @click="playAuto"><span class="material-icons is-size-5 mr-2">precision_manufacturing</span> AI play next card</a>
+                                <a class="dropdown-item" @click="playUndo"><span class="material-icons is-size-5 mr-2">replay</span> Undo last action</a>
+                                <a class="dropdown-item" @click="playAuto"><span class="material-icons is-size-5 mr-2">precision_manufacturing</span> AI play next card</a>
                                 <hr class="dropdown-divider">
-                                <a href="#" class="dropdown-item" @click="toggleGamePlayOptions('player_panel_data')">
+                                <a class="dropdown-item" @click="toggleGamePlayOptions('player_panel_data')">
                                     <span class="material-icons is-size-5 mr-2">bar_chart</span>
                                     <span v-if="gamePlayOptions.player_panel_data == false">Show</span>
                                     <span v-if="gamePlayOptions.player_panel_data == true">Hide</span> player points
                                 </a>
-                                <a href="#" class="dropdown-item" @click="toggleGamePlayOptions('other_player_cards')">
+                                <a class="dropdown-item" @click="toggleGamePlayOptions('other_player_cards')">
                                     <span class="material-icons is-size-5 mr-2">style</span>
                                     <span v-if="gamePlayOptions.other_player_cards == false">Show</span>
                                     <span v-if="gamePlayOptions.other_player_cards == true">Hide</span> cards of all players
                                 </a>
-                                <a href="#" class="dropdown-item" @click="setUiPlayOpts('shapeKind', uiPlayOpts.shapeKind == 'cards' ? 'chars' : 'cards')">
+                                <a class="dropdown-item" @click="setUiPlayOpts('shapeKind', uiPlayOpts.shapeKind == 'cards' ? 'chars' : 'cards')">
                                     <span class="material-icons is-size-5 mr-2">margin</span> Display
                                     <span v-if="uiPlayOpts.shapeKind == 'cards'">cards as text</span>
                                     <span v-if="uiPlayOpts.shapeKind == 'chars'">as cards</span>
@@ -218,7 +218,7 @@ export default {
             this.$nuxt.$loading.finish();
             return true;
         },
-        async playUndo() {
+        async playUndo(e) {
             // Undo last played card
             this.$nuxt.$loading.start();
             await this.undo({steps: 1});

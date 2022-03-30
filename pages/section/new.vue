@@ -9,22 +9,22 @@
             </div>
         </div>
         <div class="buttons is-right">
-            <button class="button light-shadow is-success has-text-weight-bold is-uppercase" @click="createRandomCardDeck">Apply rules</button>
+            <button class="button light-shadow is-success has-text-weight-bold is-capitalized" @click="createRandomCardDeck">Apply rules</button>
         </div>
         <div class="buttons">
-            <button class="button light-shadow is-warning has-text-weight-bold is-uppercase" @click="cleanCustomCardDeck">Clean all cards</button>
-            <button class="button light-shadow is-info has-text-weight-bold is-uppercase" @click="createRandomCardDeck">Random cards</button>
+            <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanCustomCardDeck">Clean all cards</button>
+            <button class="button light-shadow is-info has-text-weight-bold is-capitalized" @click="createRandomCardDeck">Random cards</button>
         </div>
         <PlayerCards :players=customPlayerCards :onlyRemainingCards='false' :showPoints='true' class="mb-3 is-fullwidth is-bordered" />
 
         <div class="block" v-if="selectedScoreRange.team">
-            <div class="has-text-centered has-text-weight-bold is-size-7">
+            <div class="has-text-centered is-size-6 is-italic">
                 The top team is <span class="is-capitalized">{{selectedScoreRange.team}}</span> with {{selectedScoreRange.points}} total HCP.
             </div>
         </div>
-        <div class="buttons">
-            <button class="button light-shadow is-light is-large has-text-weight-bold is-uppercase" @click="createNewGame()">Play</button>
-            <button class="button light-shadow is-light is-large has-text-weight-bold is-uppercase" @click="createNewGame('load-game')">Load Game</button>
+        <div class="buttons is-centered">
+            <button class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" @click="createNewGame()">Play</button>
+            <button class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" @click="createNewGame('load-game')">Load Game</button>
         </div>
     </div>
 </template>

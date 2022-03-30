@@ -25,14 +25,14 @@
                         <span class="material-icons mr-2">sports_esports</span>Game
                     </a>
                     <div class="navbar-dropdown">
-                        <NuxtLink class="navbar-item" to="/section/simulation/newgame"><span class="material-icons mr-1">add_circle_outline</span>New game</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/new"><span class="material-icons mr-1">add_circle_outline</span>New game</NuxtLink>
                         <hr class="navbar-divider">
-                        <NuxtLink class="navbar-item" to="/section/simulation/play"><span class="material-icons mr-1">play_arrow</span>Play</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/simulation/gamesettings"><span class="material-icons mr-1">settings</span>Game settings</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/play"><span class="material-icons mr-1">play_arrow</span>Play</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/gamesettings"><span class="material-icons mr-1">settings</span>Game settings</NuxtLink>
                         <hr class="navbar-divider">
-                        <NuxtLink class="navbar-item" to="/section/simulation/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/simulation/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/simulation/tricks"><span class="material-icons mr-1">front_hand</span>Tricks</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/tricks"><span class="material-icons mr-1">front_hand</span>Tricks</NuxtLink>
                     </div>
                 </div>
 
