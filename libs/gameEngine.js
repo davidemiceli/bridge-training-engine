@@ -2,7 +2,7 @@
 
 import GameHelpers from '@/libs/gameHelpers';
 import Game from '@/libs/classes/game';
-import playEngine from '@/libs/playEngine';
+import PlayEngine from '@/libs/playEngine';
 
 
 class GameEngine {
@@ -154,7 +154,7 @@ class GameEngine {
         const cardRemainingCount = players.reduce((acc, p) => acc + p.cards.length, 0);
         if (cardRemainingCount == 0) return null;
         // Check if player holds that card
-        if (!card && !GameHelpers.playerHoldsCard(player.cards, card)) {
+        if (card && !GameHelpers.playerHoldsCard(player.cards, card)) {
             throw Error(`Player ${player.id} does not hold that card ${card.card_id}`);
         }
         // Check if player plays a different suit still having cards in the loop suit

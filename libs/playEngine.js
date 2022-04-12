@@ -12,9 +12,9 @@ class PlayEngine {
         const playerSuitCards = GameHelpers.filterCardsBySuit(suit, player.cards);
         if (playerSuitCards.length > 0) {
             const suitCards = GameHelpers.filterCardsBySuit(suit, playerSuitCards);
-            return randomItemFromArray(suitCards);
+            return GameHelpers.randomItemFromArray(suitCards);
         }
-        return randomItemFromArray(player.cards);
+        return GameHelpers.randomItemFromArray(player.cards);
     }
 
 }
