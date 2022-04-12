@@ -9,7 +9,7 @@
         <nav class="container panel">
 
             <div class="panel-block is-block">
-                <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=gameState.contract :tricks=gameState.tricks :totalScore=totalScore />
+                <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=gameState.contract :tricks=gameState.tricks />
             </div>
 
             <div class="panel-block is-block">
@@ -59,7 +59,7 @@
 
             </div>
 
-            <div class="panel-block is-block" v-if='!gameState.contract_was_defined && turnOfPlayerId && !biddingIsEnding()'>
+            <div class="panel-block is-block" v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()'>
                 <BiddingBoxPlayer :playerId=turnOfPlayerId @onSelectBid=playBid />
             </div>
         </nav>
@@ -72,8 +72,8 @@
                 <PlayerCardHand :player="playersData('west')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
             <div class="column is-4 is-flex is-align-items-center">
-                <BiddingBoard :bids=bids :loopPlayers=gameState.loop_players @onClickPanel=playNext v-if='!gameState.contract_was_defined' />
-                <Playground :playedCards=playedCards :shapeKind=uiPlayOpts.shapeKind @onClickPanel=playNext v-if='gameState.contract_was_defined' />
+                <BiddingBoard :bids=bids :loopPlayers=gameState.loop_players @onClickPanel=playNext v-if='!contractWasDefined' />
+                <Playground :playedCards=playedCards :shapeKind=uiPlayOpts.shapeKind @onClickPanel=playNext v-if='contractWasDefined' />
             </div>
             <div class="column is-4 is-flex is-justify-content-start">
                 <PlayerCardHand :player="playersData('east')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <div class="container" v-if='gameState.contract_was_defined && gameState.settings && uiPlayOpts.gameAnalysis'>
+        <div class="container" v-if='contractWasDefined && gameState.settings && uiPlayOpts.gameAnalysis'>
             <GameAnalysis class="box" :players='sideBySidePlayersData()' :contract=gameState.contract :tricks=gameState.tricks />
         </div>
 
@@ -118,14 +118,9 @@ export default {
     },
     methods: {
         ...mapActions({
-            // updateTimerClock: 'game/updateTimerClock',
             incrementTimerClock: 'game/incrementTimerClock',
-            // newGame: 'game/newGame',
-            // applyGameSettings: 'game/applyGameSettings',
-            // loadSavedGame: 'game/loadSavedGame',
+            updateTimerClock: 'game/updateTimerClock',
             saveGame: 'game/saveGame',
-            // loadGame: 'game/loadGame',
-            // nextRuns: 'game/nextRuns',
             play: 'game/play',
             undo: 'game/undo'
         }),
@@ -157,6 +152,7 @@ export default {
             try {
                 await this.play({card, bid});
             } catch(err) {
+                console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
             this.$nuxt.$loading.finish();
@@ -167,6 +163,7 @@ export default {
             try {
                 await this.play({auto: true});
             } catch(err) {
+                console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
             this.$nuxt.$loading.finish();
@@ -186,6 +183,7 @@ export default {
                     if ((taskPlayOpts.steps == 13 && this.gameState.bids.length == 0) || taskPlayOpts.cancel) break;
                 }
             } catch(err) {
+                console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
             taskPlayOpts.cancel = false;
@@ -206,6 +204,7 @@ export default {
                     if (this.handEnded || taskPlayOpts.cancel) break;
                 }
             } catch(err) {
+                console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
             taskPlayOpts.cancel = false;
@@ -222,6 +221,7 @@ export default {
             // Undo last played card
             this.$nuxt.$loading.start();
             await this.undo({steps: 1});
+            this.scoreModalToggle();
             this.$nuxt.$loading.finish();
             return true;
         },
@@ -260,7 +260,7 @@ export default {
         },
         sideBySidePlayersData() {
             const { playersData } = this;
-            return ['north', 'east', 'south', 'west'].map(p => playersData(p));
+            return GameHelpers.loopPlayers('north').map(p => playersData(p));
         },
         endBiddingAfter4Pass() {
             return this.bids.length > 3 && this.bids.slice(-4).every(b => b.id == 'pass');
@@ -279,17 +279,13 @@ export default {
     computed: {
         ...mapGetters({
             timerClock: 'game/timerClock',
-            totalScore: 'game/totalScore',
             playerSettings: 'game/playerSettings',
             gameState: 'game/all',
             gameNotCreated: 'game/notCreated',
-            // gameStateExists: 'game/exists',
             players: 'game/players',
             playedCards: 'game/playedCards',
             bids: 'game/bids',
-            // tricks: 'game/tricks',
-            handEnded: 'game/handEnded',
-            // score: 'game/score'
+            handEnded: 'game/handEnded'
         }),
         turnOfPlayerId() {
             return this.gameState.current_player;
@@ -302,6 +298,10 @@ export default {
         dummyPlayer() {
             const { dummyPlayerId, players } = this;
             return dummyPlayerId ? GameHelpers.getPlayer(players, dummyPlayerId) : null;
+        },
+        contractWasDefined() {
+            const { gameState } = this;
+            return gameState && gameState.contractWasDefined && gameState.contractWasDefined();
         }
     },
     async mounted() {

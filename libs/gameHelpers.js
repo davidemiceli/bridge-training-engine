@@ -6,6 +6,7 @@ import { mapGetters, mapActions } from 'vuex';
 const player_nexts = {north: 'east', east: 'south', south: 'west', west: 'north'};
 const player_partners = {south: 'north', west: 'east', north: 'south', east: 'west'};
 const suit_symbols = {diamonds: '♦', clubs: '♣', hearts: '♥', spades: '♠', notrump: 'nt'};
+const suit_ranking = ['clubs', 'diamonds', 'hearts', 'spades', 'notrump'];
 const value_symbols = {'11': 'J', '12': 'Q', '13': 'K', '14': 'A'};
 const card_unicode = {
     // Spades
@@ -46,38 +47,6 @@ class GameHelpers {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    gameStoreGetters() {
-        return mapGetters({
-            timerClock: 'game/timerClock',
-            totalScore: 'game/totalScore',
-            playerSettings: 'game/playerSettings',
-            gameState: 'game/all',
-            gameNotCreated: 'game/notCreated',
-            gameStateExists: 'game/exists',
-            players: 'game/players',
-            playedCards: 'game/playedCards',
-            bids: 'game/bids',
-            tricks: 'game/tricks',
-            handEnded: 'game/handEnded',
-            score: 'game/score'
-        });
-    }
-
-    gameStoreActions() {
-        return mapActions({
-            updateTimerClock: 'game/updateTimerClock',
-            incrementTimerClock: 'game/incrementTimerClock',
-            newGame: 'game/newGame',
-            applyGameSettings: 'game/applyGameSettings',
-            loadSavedGame: 'game/loadSavedGame',
-            saveGame: 'game/saveGame',
-            loadGame: 'game/loadGame',
-            nextRuns: 'game/nextRuns',
-            play: 'game/play',
-            undo: 'game/undo'
-        });
-    }
-
     players() {
         return ['south', 'west', 'north', 'east'];
     }
@@ -98,7 +67,7 @@ class GameHelpers {
     }
 
     bidTrumps() {
-        return Object.keys(suit_symbols);
+        return suit_ranking.slice(0);
     }
 
     bidValues() {
@@ -140,7 +109,9 @@ class GameHelpers {
     teamTricks(tricks) {
         const teams = this.teams();
         return teams.reduce((acc, team_id) => {
-            acc[team_id] = (tricks && tricks.length > 0) ? tricks.filter(t => t.filter(c => c.winner && c.team_id == team_id).length).length : 0;
+            acc[team_id] = (tricks && tricks.length > 0) ? tricks.filter(t => {
+                return t.filter(c => c.winner && c.team_id == team_id).length
+            }).length : 0;
             return acc;
         }, {});
     }
@@ -183,12 +154,20 @@ class GameHelpers {
         };
     }
 
+    getLoopSuit(played_cards) {
+        return played_cards[0] && played_cards[0].suit;
+    }
+
     filterCardsByPlayerId(player_id, cards) {
         return cards.filter(c => c.player_id == player_id);
     }
 
     filterCardsBySuit(suit, cards) {
         return cards.filter(c => c.suit == suit).sort((a, b) => a.rank - b.rank);
+    }
+
+    playerHoldsCard(cards, card) {
+        return cards.filter(c => c.card_id == card.card_id).length > 0;
     }
 
     getPlayerCards(players, player_id) {
@@ -244,6 +223,30 @@ class GameHelpers {
         return list;
     }
 
+    calculateBonusScore(value, trump, kind) {
+        // Evaluate contract bonus score
+        if (value == 7) {
+            // Big Slam bonus
+            return ['Big Slam', kind == 'red' ? 1500 : 1000];
+        } else if (value == 6) {
+            // Small Slam bonus
+            return ['Small Slam', kind == 'red' ? 750 : 500];
+        } else if ((value >= 3 && trump == 'notrump') || (value >= 4 && ['hearts', 'spades'].includes(trump)) || (value >= 4 && ['diamonds', 'clubs'].includes(trump))) {
+            // Manche bonus
+            return ['Manche', kind == 'red' ? 500 : 300];
+        } else {
+            // Partial bonus
+            return ['Partial', 50];
+        }
+    }
+
+    evaluateTrickScore(trump, card) {
+        if (card.team_trick_count < 7) return 0;
+        if (trump == 'notrump') return card.team_trick_count == 7 ? 40 : 30;
+        if (['hearts', 'spades'].includes(card.suit) && ['hearts', 'spades'].includes(trump)) return 30;
+        else return 20;
+    }
+
     tricksByTeamPoints(points) {
         if (points >= 20 && points <= 22) return 1
         else if (points >= 23 && points <= 24) return 2
@@ -253,6 +256,11 @@ class GameHelpers {
         else if (points >= 33 && points <= 36) return 6
         else if (points >= 37) return 7
         else return 0
+    }
+
+    getTrickWinner(trickCards) {
+        // Get the player that won the trick
+        return trickCards.filter(c => c.winner).map(c => c.player_id)[0];
     }
 
     getGameCustoms() {
@@ -398,6 +406,65 @@ class GameHelpers {
 
     loopNextPlayer(player_id) {
         return this.loopPlayers(player_id);
+    }
+
+    biddingIsEnded(bids) {
+        // Check if bidding phase is ended
+        if (bids.length > 3) {
+            const aBidExists = (bids.slice(-4)[0].id != 'pass');
+            const nextThreePass = bids.slice(-3).reduce((acc, b) => acc + (b.id == 'pass' ? 1 : 0), 0) == 3;
+            if (aBidExists && nextThreePass) return true;
+        }
+        return false;
+    }
+
+    extractBidMetadataById(bid) {
+        // Infer bid tricks and trump from bid id
+        if (bid == 'pass') return ['pass', 0, 'notrump'];
+        try {
+            const splitted = bid.split(' ');
+            const [ bid_id, bid_value, trump ] = [ bid, parseInt(splitted[0]), splitted[1] ];
+            return [ bid_id, bid_value, trump ];
+        } catch {
+            throw Error('Invalid human player bid id.');
+        }
+    }
+
+    createBid(player_id, player_bid) {
+        // Create a bid object
+        const bid_rank = this.bid_ranking();
+        if (player_bid == 'pass') return {id: 'pass', value: 0, trump: 'notrump', rank: 0, player_id};
+        else if (player_bid == 'double') return {id: 'double', value: 0, trump: 'notrump', rank: 0, player_id};
+        else if (player_bid == 'redouble') return {id: 'redouble', value: 0, trump: 'notrump', rank: 0, player_id};
+        // Get current bid metadata
+        const [ bid_id, bid_value, trump ] = this.extractBidMetadataById(player_bid);
+        const current_bid_rank = parseInt(bid_rank[bid_id]);
+        return {
+            id: bid_id,
+            value: bid_value,
+            trump: trump,
+            rank: current_bid_rank,
+            player_id: player_id
+        };
+    }
+
+    bidIsValid(bid, bids) {
+        // Check if bid is valid
+        const bidCount = bids.length;
+        const bidWithMaxRank = bidCount > 0 ? bids.slice(0).sort((a, b) => a.rank - b.rank).slice(-1)[0] : null;
+        if (['double', 'redouble'].includes(bid.id) && (bidWithMaxRank == null)) return false;
+        if (bidWithMaxRank == null) return true;
+        // Check if was already declared a double or a redouble
+        const maxBidIndex = bids.map((b, i) => b.id == bidWithMaxRank.id ? i : null).filter(i => i != null)[0];
+        const doubleCount = bids.slice(maxBidIndex).reduce((acc, b) => b.id == 'double' ? acc + 1 : acc, 0);
+        const redoubleCount = bids.slice(maxBidIndex).reduce((acc, b) => b.id == 'redouble' ? acc + 1 : acc, 0);
+        if (bid.id == 'double') {
+            if (bids.map(b => b.id == 'pass').every(v => v === true) || bidCount == 0 || doubleCount > 0 || redoubleCount > 0) return false;
+        }
+        if (bid.id == 'redouble' && (doubleCount == 0 || redoubleCount > 0)) return false;
+        if (['double', 'redouble', 'pass'].includes(bid.id)) return true;
+        // Check if was already declared a bid with a greater value
+        return (bid.rank > bidWithMaxRank.rank) || (bid.rank == 0);
     }
 };
   

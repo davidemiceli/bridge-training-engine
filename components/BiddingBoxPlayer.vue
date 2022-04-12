@@ -5,13 +5,9 @@
                 <span class="card-text is-uppercase is-clickable mr-5" @click="onSelectBid(v, null)"
                 v-bind:class="[v == value ? 'card-black' : 'has-text-grey']">{{v}}</span>
             </span>
-        </p>
-        <p class="card-suit is-size-6 has-text-weight-bold has-text-centered">
-            <span v-bind:class="[suit == trump ? suitColor(suit) : 'has-text-grey', suit != 'notrump' ? 'mr-5' : '']" v-for="suit in bidTrumps" :key=suit>
+            <span v-bind:class="[suit == trump ? suitColor(suit) : 'has-text-grey', 'mr-5']" v-for="suit in bidTrumps" :key=suit>
                 <span class="card-text is-uppercase is-clickable" @click="onSelectBid(null, suit)">{{suitSymbol(suit)}}</span>
             </span>
-        </p>
-        <p class="card-suit is-size-6 has-text-weight-bold has-text-centered">
             <span class="mr-4 has-text-success-dark is-clickable" @click="onSelectBid('pass', null)">PASS</span>
             <span class="mr-4 has-text-danger-dark is-clickable" @click="onSelectBid('double', null)">X</span>
             <span class="mr-4 has-text-info-dark is-clickable" @click="onSelectBid('redouble', null)">XX</span>

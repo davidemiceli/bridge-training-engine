@@ -29,19 +29,19 @@
                         </thead>
                         <tbody>
                             <tr v-for="s in score" :key=s.team_id>
-                                <td class="is-uppercase" v-bind:class="[s.team_id]">{{teamAbbr(s.team_id)}}</td>
-                                <td>
+                                <td class="is-vcentered is-uppercase" v-bind:class="[s.team_id]">{{teamAbbr(s.team_id)}}</td>
+                                <td class="is-vcentered">
                                     <SingleCard :card=contractName :cardSize='6' class="has-text-centered" v-if="s.contract" />
                                 </td>
-                                <td>
+                                <td class="is-vcentered">
                                     <span v-if="s.contract">{{s.bonus_kind}} +{{s.bonus}}</span>
                                 </td>
-                                <td>{{s.score}}</td>
-                                <td>
+                                <td class="is-vcentered">{{s.score}}</td>
+                                <td class="is-vcentered">
                                     <span v-if="s.contract">{{s.score + s.bonus}}</span>
                                     <span v-if="!s.contract">{{s.score}}</span>
                                 </td>
-                                <td>
+                                <td class="is-vcentered">
                                     <span v-if="s.contract">{{deltaTricks(s.winned_tricks - 6 - contract.value)}}</span>
                                     <span v-if="!s.contract">{{deltaTricks(s.winned_tricks - (7 - contract.value))}}</span>
                                     <span>({{s.winned_tricks}})</span>
@@ -54,8 +54,8 @@
             </section>
 
             <footer class="modal-card-foot" style="justify-content: center;">
-                <a href="#" class="button is-medium" @click="onClickClose()">Close</a>
-                <NuxtLink to="/section/simulation/newgame" class="button is-medium is-success">New game</NuxtLink>
+                <NuxtLink to="" class="button is-medium" @click.native="onClickClose()">Close</NuxtLink>
+                <NuxtLink to="/section/new" class="button is-medium is-success">New game</NuxtLink>
             </footer>
 
         </div>

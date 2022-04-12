@@ -7,9 +7,9 @@
         </div>
         <div class="is-size-6 has-text-weight-bold mb-1" v-if="player.showdata">{{points}} HCP ({{cardDistribution}} distribution)</div>
         <div v-if="shapeKind == 'chars'">
-            <div v-for="suit in suitValues" :key=suit class="is-size-4 has-text-weight-bold icon-text is-unselectable" v-bind:class="[suitColor(suit)]">
+            <div v-for="suit in suitValues" :key=suit class="is-size-4 has-text-weight-bold is-unselectable" v-bind:class="[suitColor(suit)]">
                 <span class="card-suit">{{suitIcon(suit)}}</span>
-                <span class="icon material-icons has-text-weight-bold has-text-grey-light" v-if="!player.show">horizontal_rule</span>
+                <span class="material-icons has-text-weight-bold has-text-grey-light" v-if="!player.show">horizontal_rule</span>
                 <span v-if="player.show">
                     <span v-for="c in getCards(suit, player.cards)" :key=c.card_id class="ml-1" v-bind:class="[clickableCard]" @click="onClickCard(c)">{{cardValueIcon(c.value)}}</span>
                 </span>

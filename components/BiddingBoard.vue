@@ -5,7 +5,7 @@
                 <h4 class="is-size-6 is-uppercase has-text-weight-bold">{{player_id}}</h4>
             </div>
         </div>
-        <div class="tile is-3 is-parent" v-for="b in bidList" :key=b.id>
+        <div class="tile is-3 is-parent" v-for="(b, i) in bidList" :key=i>
             <div class="tile is-child is-flex is-justify-content-center card-suit is-size-6 has-text-weight-bold">
                 <span class="card-text is-uppercase" v-bind:class="[suitColor(b.name.suit)]" v-if="isNormalBid(b.id)">{{b.name.value}} {{suitSymbol(b.name.suit)}}</span>
                 <span class="has-text-success-dark" v-if="b.id == 'pass'">PASS</span>

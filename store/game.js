@@ -5,28 +5,15 @@ import GameHelpers from '@/libs/gameHelpers';
 
 // Game state store
 export const state = () => ({
-    data: {},
-    totalScore: {manches: 0, points: (GameHelpers.teams()).reduce((a,t) => {a[t]=0; return a;}, {}) },
-    timerClock: moment().set({hour:0, minute:0, second:0, millisecond:0})
+    data: {}
 });
 
 export const mutations = {
-    UPDATE_TIMER(state, { seconds }) {
-        state.timerClock = state.timerClock.add(seconds, 'seconds');
-    },
     INCREMENT_TIMER(state) {
-        state.timerClock = state.timerClock.add(1, 'seconds');
+        state.data.timer_clock = moment(state.data.timer_clock).add(1, 'seconds');
     },
     RESET_TIMER(state) {
-        state.timerClock = moment().set({hour:0, minute:0, second:0, millisecond:0});
-    },
-    UPDATE_SCORE(state, { items }) {
-        if (items.length > 0) state.totalScore.manches += 1;
-        items.forEach(s => {
-            const { team_id, score, bonus } = s;
-            if (!(team_id in state.totalScore.points)) state.totalScore.points[team_id] = 0;
-            state.totalScore.points[team_id] += score + bonus;
-        });
+        state.data.timer_clock = moment().set({hour:0, minute:0, second:0, millisecond:0});
     },
     UPDATE(state, { item }) {
         state.data = item;
@@ -49,7 +36,6 @@ export const actions = {
         return;
     },
     async saveGame(ctx) {
-        await GameAPIs.saveGame();
         return;
     },
     async loadSavedGame(ctx) {
@@ -58,9 +44,17 @@ export const actions = {
         return;
     },
     async loadGame(ctx) {
-        const data = await GameAPIs.loadGame();
+        // const data = await GameAPIs.loadGame();
+        // ctx.commit('UPDATE', {item: data});
+        return;
+    },
+    async getGame(ctx) {
+        const data = await GameAPIs.getGame();
         ctx.commit('UPDATE', {item: data});
         return;
+    },
+    async updateGame(ctx) {
+
     },
     async nextRuns(ctx, {runs}) {
         const data = await GameAPIs.nextStep(runs);
@@ -68,10 +62,9 @@ export const actions = {
         return;
     },
     async play(ctx, {card, bid, auto}) {
-        const data = await GameAPIs.play({card, bid, auto});
+        const newTimer = ctx.state.data.timer_clock;
+        const data = await GameAPIs.play({newTimer, card, bid, auto});
         ctx.commit('UPDATE', {item: data});
-        const score = (data && data.score) || [];
-        ctx.commit('UPDATE_SCORE', {items: score});
         return;
     },
     async undo(ctx, {steps}) {
@@ -82,19 +75,12 @@ export const actions = {
     incrementTimerClock(ctx) {
         ctx.commit('INCREMENT_TIMER');
         return;
-    },
-    updateTimerClock(ctx, {seconds}) {
-        ctx.commit('UPDATE_TIMER', {seconds});
-        return;
     }
 };
 
 export const getters = {
     timerClock(state) {
-        return state.timerClock;
-    },
-    totalScore(state) {
-        return state.totalScore;
+        return moment(state.data.timer_clock);
     },
     playerSettings(state) {
         const { settings } = state.data;
@@ -106,7 +92,7 @@ export const getters = {
         return state.data;
     },
     notCreated(state) {
-        return Object.keys(state.data).length === 0;
+        return state.data && (Object.keys(state.data).length === 0);
     },
     exists(state) {
         return Object.keys(state.data).length > 0;
@@ -115,17 +101,17 @@ export const getters = {
         return state.data.players || [];
     },
     playedCards(state) {
-        return state.data.loop_cards || [];
+        return state.data.loopCards() || [];
     },
     bids(state) {
-        const all_bids_count = state.data.bids && state.data.bids.length;
-        return all_bids_count > 0 ? state.data.bids : [];
+        const allBidsCount = state.data.bids && state.data.bids.length;
+        return allBidsCount > 0 ? state.data.bids : [];
     },
     tricks(state) {
         return state.data.tricks || [];
     },
     handEnded(state) {
-        return state.data.score && (state.data.score.length > 0);
+        return state.data && state.data.score && (state.data.score.length > 0);
     },
     score(state) {
         return state.data.score || [];

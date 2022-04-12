@@ -1,16 +1,18 @@
 
 
 export default async function(self) {
-    if (!self.gameNotCreated) return;
-    return self.$nextTick(async () => {
+    const gameNotCreated = self.$store.getters['game/notCreated'];
+    if (gameNotCreated) return self.$nextTick(async () => {
         self.$nuxt.$loading.start();
         try {
-            await self.loadGame();
+            await self.$store.dispatch('game/getGame');
             self.$nuxt.$loading.finish();
             return;
         } catch(err) {
+            console.error(err);
             self.$nuxt.$loading.finish();
-            return self.$router.push({path: '/section/simulation/newgame'});
+            return self.$router.push({path: '/section/new'});
         }
     });
+    return;
 }

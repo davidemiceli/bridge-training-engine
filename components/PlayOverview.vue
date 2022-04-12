@@ -70,8 +70,7 @@ export default {
     props: {
         gameTime: String,
         contract: Object,
-        tricks: Array,
-        totalScore: Object
+        tricks: Array
     },
     methods: {
         suitColor(suit) {

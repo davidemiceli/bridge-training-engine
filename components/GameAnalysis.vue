@@ -150,7 +150,7 @@ export default {
                 // Establishment (affrancamento)
                 return 'establishment';
             }
-            // Ruffing = taglio
+            // Ruffing (taglio)
             if (partner_card.suit != t.suit) {
                 const opponent_suit_cards = opponent_cards.filter(c => c.suit == t.suit).length;
                 if (opponent_suit_cards == 0) return 'long ruffing';
