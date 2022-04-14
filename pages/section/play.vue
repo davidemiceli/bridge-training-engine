@@ -38,13 +38,13 @@
                                 <hr class="dropdown-divider">
                                 <a class="dropdown-item" @click="toggleGamePlayOptions('player_panel_data')">
                                     <span class="material-icons is-size-5 mr-2">bar_chart</span>
-                                    <span v-if="gamePlayOptions.player_panel_data == false">Show</span>
-                                    <span v-if="gamePlayOptions.player_panel_data == true">Hide</span> player points
+                                    <span v-if="uiPlayOptions.player_panel_data == false">Show</span>
+                                    <span v-if="uiPlayOptions.player_panel_data == true">Hide</span> player points
                                 </a>
                                 <a class="dropdown-item" @click="toggleGamePlayOptions('other_player_cards')">
                                     <span class="material-icons is-size-5 mr-2">style</span>
-                                    <span v-if="gamePlayOptions.other_player_cards == false">Show</span>
-                                    <span v-if="gamePlayOptions.other_player_cards == true">Hide</span> cards of all players
+                                    <span v-if="uiPlayOptions.other_player_cards == false">Show</span>
+                                    <span v-if="uiPlayOptions.other_player_cards == true">Hide</span> cards of all players
                                 </a>
                                 <a class="dropdown-item" @click="setUiPlayOpts('shapeKind', uiPlayOpts.shapeKind == 'cards' ? 'chars' : 'cards')">
                                     <span class="material-icons is-size-5 mr-2">margin</span> Display
@@ -104,11 +104,6 @@ export default {
             scoreModalOpen: true,
             alertMsg: null,
             originalLoop: [],
-            gamePlayOptions: {
-                auto_play: false,
-                player_panel_data: false,
-                other_player_cards: false
-            },
             taskPlayOpts: {title: '', active: false, cancel: false, steps: 0, done_perc: 0},
             uiPlayOpts: {
                 shapeKind: 'cards',
@@ -120,6 +115,7 @@ export default {
         ...mapActions({
             incrementTimerClock: 'game/incrementTimerClock',
             updateTimerClock: 'game/updateTimerClock',
+            applyUiPlayOptions: 'game/applyUiPlayOptions',
             saveGame: 'game/saveGame',
             play: 'game/play',
             undo: 'game/undo'
@@ -243,13 +239,13 @@ export default {
             return playerId == dummy_partner_id && (playerSettings[dummy_partner_id].show_cards == "yes" || playerSettings[dummyPlayerId].show_cards == "yes");
         },
         sideBySidePlayers() {
-            const { players, gamePlayOptions } = this;
-            const player_ids = gamePlayOptions.inline_cards ? ['north', 'south', 'east', 'west'] : ['north', 'east', 'south', 'west'];
+            const { players, uiPlayOptions } = this;
+            const player_ids = uiPlayOptions.inline_cards ? ['north', 'south', 'east', 'west'] : ['north', 'east', 'south', 'west'];
             return player_ids.map(p_id => GameHelpers.getPlayer(players, p_id));
         },
         playersData(player_id) {
-            const show_other_cards = this.gamePlayOptions.other_player_cards;
-            const showdata = this.gamePlayOptions.player_panel_data;
+            const show_other_cards = this.uiPlayOptions.other_player_cards;
+            const showdata = this.uiPlayOptions.player_panel_data;
             const p = GameHelpers.getPlayer(this.players, player_id);
             return {
                 ...p,
@@ -268,8 +264,11 @@ export default {
         biddingIsEnding() {
             return this.bids.length > 3 && this.bids.slice(-3).every(b => b.id == 'pass') && this.bids.slice(-4)[0].id != 'pass';
         },
-        toggleGamePlayOptions(name) {
-            this.gamePlayOptions[name] = this.gamePlayOptions[name] == true ? false : true;
+        async toggleGamePlayOptions(name) {
+            const { uiPlayOptions } = this;
+            const opts = Object.assign({}, uiPlayOptions);
+            opts[name] = opts[name] == true ? false : true;
+            return await this.applyUiPlayOptions(opts);
         },
         setUiPlayOpts(item, value) {
             this.uiPlayOpts[item] = value;
@@ -287,6 +286,10 @@ export default {
             bids: 'game/bids',
             handEnded: 'game/handEnded'
         }),
+        uiPlayOptions() {
+            const { gameState } = this;
+            return (gameState && gameState.settings && gameState.settings.uiPlayOptions) || {};
+        },
         turnOfPlayerId() {
             return this.gameState.current_player;
         },

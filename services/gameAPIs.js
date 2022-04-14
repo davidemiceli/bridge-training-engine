@@ -34,6 +34,13 @@ class GameAPIs {
         throw Error('Not implemented yet!');
     }
 
+    async updateUiPlayOptions(data) {
+        const s = this._getGameState();
+        s.updateUiPlayOptions(data);
+        this._storeGameState(s);
+        return s;
+    }
+
     async loadSavedGame() {
         throw Error('Not implemented yet!');
     }

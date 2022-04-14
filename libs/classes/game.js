@@ -36,6 +36,10 @@ export default class {
         });
     }
 
+    updateUiPlayOptions(data) {
+        this.settings.uiPlayOptions = Object.assign(this.settings.uiPlayOptions, data);
+    }
+
     setTimerClock(newTimer) {
         this.timer_clock = moment(newTimer);
     }

@@ -35,6 +35,11 @@ export const actions = {
         ctx.commit('UPDATE', {item: data});
         return;
     },
+    async applyUiPlayOptions(ctx, params) {
+        const data = await GameAPIs.updateUiPlayOptions(params);
+        ctx.commit('UPDATE', {item: data});
+        return;
+    },
     async saveGame(ctx) {
         return;
     },

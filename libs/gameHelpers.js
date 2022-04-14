@@ -268,7 +268,12 @@ class GameHelpers {
         return {
             bidding: 'manual',
             cards: [],
-            playground: 'classic-playground',
+            uiPlayOptions: {
+                auto_play: false,
+                player_panel_data: false,
+                other_player_cards: false
+            },
+            // playground: 'classic-playground',
             display_cards_top_team: false,
             display_cards_contract_team: false,
             players: players.reduce((acc, p) => {
