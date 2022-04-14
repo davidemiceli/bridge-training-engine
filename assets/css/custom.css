@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "CardPlaySans";
-  src: url(/DejaVuLGCSans.ttf) format("truetype");
+  src: url(/bridge-training-engine/DejaVuLGCSans.ttf) format("truetype");
 }
 
 html, body {
