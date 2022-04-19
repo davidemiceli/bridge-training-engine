@@ -5,7 +5,7 @@
             <div class="level-item has-text-centered" v-if='attack'>
                 <div>
                     <p class="heading has-text-weight-bold">Attack</p>
-                    <p class="is-size-3" v-bind:class="[suitColor(attack.suit)]">
+                    <p class="is-size-3 card-shape" v-bind:class="[suitColor(attack.suit)]">
                         {{cardUnicode(attack.card_id)}}
                     </p>
                 </div>

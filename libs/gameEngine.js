@@ -54,7 +54,7 @@ class GameEngine {
                     pNext.activateDummy();
                 }
             }
-            // Calculate tricks FIXME:
+            // Calculate tricks
             const tricks = this.createTricks(contract.trump, s.completedLoopsCards());
             s.updateTricks(tricks);
         } else {
@@ -161,8 +161,8 @@ class GameEngine {
         const loopSuit = GameHelpers.getLoopSuit(loop_cards);
         const playerSuitCards = GameHelpers.filterCardsBySuit(loopSuit, player.cards);
         if (auto) {
-            card = PlayEngine.randomPlay(player, loop_cards);
-            // card = PlayEngine.logicReasoning(player, loop_cards, players, contract);
+            // card = PlayEngine.randomPlay(player, loop_cards);
+            card = PlayEngine.logicReasoning(player, loop_cards, players, contract);
         }
         if (card.suit != loopSuit && playerSuitCards.length > 0) {
             throw Error(`Player can not play ${card.suit} cards having ${loopSuit} cards yet!`);

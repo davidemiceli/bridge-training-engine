@@ -1,7 +1,5 @@
 'use strict';
 
-import { mapGetters, mapActions } from 'vuex';
-
 // Constants
 const player_nexts = {north: 'east', east: 'south', south: 'west', west: 'north'};
 const player_partners = {south: 'north', west: 'east', north: 'south', east: 'west'};
@@ -26,7 +24,7 @@ const card_unicode = {
 };
 
 // Utilities
-class GameHelpers {
+export default new class {
 
     constructor() { }
 
@@ -35,13 +33,29 @@ class GameHelpers {
         alertModal.show(errmsg);
     }
 
+    permutations(arr) {
+        const permArr = [], usedChars = [];
+        const permute = input => {
+            for (let i = 0; i < input.length; i++) {
+              const ch = input.splice(i, 1)[0];
+              usedChars.push(ch);
+              if (input.length == 0) permArr.push(usedChars.slice());
+              permute(input);
+              input.splice(i, 0, ch);
+              usedChars.pop();
+            }
+            return permArr;
+        };
+        return permute(arr);
+    }
+
     chunk(arr, len) {
         const chunks = [];
         const n = arr.length;
         let i = 0;
         while (i < n) chunks.push(arr.slice(i, i += len));
         return chunks;
-      }
+    }
 
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -88,7 +102,7 @@ class GameHelpers {
         return acc;
     }
 
-    bid_ranking() {
+    bidRanking() {
         const bids = this.bids();
         return bids.reduce((acc, b) => {
             acc[b.bid_id] = b.rank;
@@ -100,8 +114,8 @@ class GameHelpers {
         return Math.max(...bids.map(b => b.rank));
     }
 
-    bid_is_lower(bid_id, bids) {
-        const bid_ranking = this.bid_ranking();
+    bidIsLower(bid_id, bids) {
+        const bid_ranking = this.bidRanking();
         const max_rank = this.topBidRank(bids);
         return bid_ranking[bid_id] <= max_rank;
     }
@@ -166,6 +180,10 @@ class GameHelpers {
         return cards.filter(c => c.suit == suit).sort((a, b) => a.rank - b.rank);
     }
 
+    hasCardsOfSuit(suit, cards) {
+        return cards.filter(c => c.suit == suit).length > 0;
+    }
+
     playerHoldsCard(cards, card) {
         return cards.filter(c => c.card_id == card.card_id).length > 0;
     }
@@ -199,6 +217,21 @@ class GameHelpers {
 
     getOpponentTeam(player_id) {
         return this.getPlayerTeam(this.getRandomOpponentId(player_id));
+    }
+
+    getNextOpponentId(player_id) {
+        return player_nexts[player_id];
+    }
+
+    getOpponentCards(player_id, players) {
+        const partner_id = this.getPartnerId(player_id);
+        const opponents = players.filter(p => p.id != player_id && p.id != partner_id);
+        return opponents[0].cards.concat(opponents[1].cards);
+    }
+
+    getNextOpponentCards(player_id, players) {
+        const nextOpponentId = this.getNextOpponentId(player_id);
+        return players.filter(p => p.id = nextOpponentId)[0].cards.slice(0);
     }
 
     equalTeam(player_one, player_two) {
@@ -437,7 +470,7 @@ class GameHelpers {
 
     createBid(player_id, player_bid) {
         // Create a bid object
-        const bid_rank = this.bid_ranking();
+        const bid_rank = this.bidRanking();
         if (player_bid == 'pass') return {id: 'pass', value: 0, trump: 'notrump', rank: 0, player_id};
         else if (player_bid == 'double') return {id: 'double', value: 0, trump: 'notrump', rank: 0, player_id};
         else if (player_bid == 'redouble') return {id: 'redouble', value: 0, trump: 'notrump', rank: 0, player_id};
@@ -472,5 +505,3 @@ class GameHelpers {
         return (bid.rank > bidWithMaxRank.rank) || (bid.rank == 0);
     }
 };
-  
-export default new GameHelpers();

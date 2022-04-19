@@ -1,9 +1,10 @@
 'use strict';
 
 import GameHelpers from '@/libs/gameHelpers';
+import LogicReasoning from '@/libs/AI/logicReasoning';
 
 
-class PlayEngine {
+export default new class {
 
     constructor() { }
 
@@ -17,6 +18,8 @@ class PlayEngine {
         return GameHelpers.randomItemFromArray(player.cards);
     }
 
-}
+    logicReasoning(player, loop_cards, players, contract) {
+        return LogicReasoning.play(player, loop_cards, players, contract);
+    }
 
-export default new PlayEngine();
+};

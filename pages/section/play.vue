@@ -132,7 +132,7 @@ export default {
             if (this.endBiddingAfter4Pass()) return this.showAlert('After 4 pass, no contract is possible and a new game must be created.');
             // Play bid checks
             if (bid != null && !isPlayerTurn(bid.player_id)) return this.showAlert(`This is not the turn of ${bid.player_id} player.`);
-            if (bid != null && bid.bid_id != 'pass' && GameHelpers.bid_is_lower(bid.bid_id, gameState.bids)) {
+            if (bid != null && bid.bid_id != 'pass' && GameHelpers.bidIsLower(bid.bid_id, gameState.bids)) {
                 return this.showAlert(`Player ${bid.player_id} cannot bid less than or equal to the highest bid.`);
             }
             // Play card checks

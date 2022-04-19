@@ -1,15 +1,15 @@
 <template>
 
     <div>
-        <p class="title has-text-weight-bold has-text-centered" v-if="viewMode == 'normal'">Bids</p>
+        <p class="title has-text-weight-bold has-text-centered">Bids</p>
         <!-- Bids table -->
         <div class="table-container">
-            <table class="table is-bordered is-striped is-fullwidth has-text-centered" v-bind:class="[viewMode == 'compact' ? 'is-narrow' : '']">
+            <table class="table is-bordered is-striped is-fullwidth has-text-centered">
                 <thead>
                     <tr>
-                        <th v-if="viewMode == 'normal'">Id</th>
+                        <th>#</th>
                         <th>Bid</th>
-                        <th v-if="viewMode == 'normal'">Trump</th>
+                        <th>Trump</th>
                         <th>Player</th>
                         <th>Double</th>
                         <th>Redouble</th>
@@ -17,14 +17,14 @@
                 </thead>
                 <tbody>
                     <tr v-for="(b, index) in bidList" :key=index>
-                        <td v-if="viewMode == 'normal'">{{b.id}}</td>
+                        <td>{{index + 1}}</td>
                         <td>
                             <SingleCard :card=b.name :cardSize='6' class="has-text-centered" v-if="isNormalBid(b.id)" />
                             <strong v-if="b.id == 'pass'">PASS</strong>
                             <strong class="has-text-danger-dark" v-if="b.id == 'double'">X</strong>
                             <strong class="has-text-info-dark" v-if="b.id == 'redouble'">XX</strong>
                         </td>
-                        <td v-if="viewMode == 'normal'">
+                        <td>
                             <strong class="card-suit is-size-6 is-uppercase" v-bind:class="[suitColor(b.trump)]" v-if="isNormalBid(b.id)">{{suitSymbol(b.trump)}}</strong>
                             <span class="material-icons has-text-grey-lighter" v-if="b.id == 'pass'">remove</span>
                         </td>
@@ -53,12 +53,6 @@ import gameNotCreatedMiddleware from '@/libs/customMiddlewares/gameNotCreated';
 
 export default {
     layout: 'play',
-    data: function() {
-        return {
-            // bids: this.bids
-            viewMode: 'normal'
-        }
-    },
     methods: {
         isNormalBid(value) {
             return ['pass', 'double', 'redouble'].indexOf(value) === -1;

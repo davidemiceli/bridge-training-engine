@@ -25,10 +25,10 @@
                         <span class="material-icons mr-2">sports_esports</span>Game
                     </a>
                     <div class="navbar-dropdown">
-                        <NuxtLink class="navbar-item" to="/section/new"><span class="material-icons mr-1">add_circle_outline</span>New game</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/new"><span class="material-icons mr-1">add_circle_outline</span>New</NuxtLink>
                         <hr class="navbar-divider">
                         <NuxtLink class="navbar-item" to="/section/play"><span class="material-icons mr-1">play_arrow</span>Play</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/gamesettings"><span class="material-icons mr-1">settings</span>Game settings</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/section/gamesettings"><span class="material-icons mr-1">settings</span>Settings</NuxtLink>
                         <hr class="navbar-divider">
                         <NuxtLink class="navbar-item" to="/section/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
                         <NuxtLink class="navbar-item" to="/section/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
