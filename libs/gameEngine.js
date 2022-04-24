@@ -77,7 +77,8 @@ class GameEngine {
     nextStep(runs) { }
 
     getNextPlayer(player_id, players) {
-        return GameHelpers.getPlayer(players, GameHelpers.getNextPlayer(player_id));
+        const nextPlayerId = GameHelpers.getNextPlayer(player_id);
+        return GameHelpers.getPlayer(players, nextPlayerId);
     }
 
     getNextPlayerToPlay(s) {

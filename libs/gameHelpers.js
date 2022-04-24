@@ -225,13 +225,13 @@ export default new class {
 
     getOpponentCards(player_id, players) {
         const partner_id = this.getPartnerId(player_id);
-        const opponents = players.filter(p => p.id != player_id && p.id != partner_id);
+        const opponents = players.slice(0).filter(p => p.id != player_id && p.id != partner_id);
         return opponents[0].cards.concat(opponents[1].cards);
     }
 
     getNextOpponentCards(player_id, players) {
         const nextOpponentId = this.getNextOpponentId(player_id);
-        return players.filter(p => p.id = nextOpponentId)[0].cards.slice(0);
+        return players.filter(p => p.id == nextOpponentId)[0].cards.slice(0);
     }
 
     equalTeam(player_one, player_two) {

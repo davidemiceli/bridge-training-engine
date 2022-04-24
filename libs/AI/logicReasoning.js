@@ -9,10 +9,10 @@ export default new class {
 
     sequencePlay(player, suit) {
         // Play team sequence cards if existing
-        const partnerSeqCard = AiHelpers.honorSequenceCard(player.partner.cards, suit=suit)
-        const playerSeqCard = AiHelpers.honorSequenceCard(player.cards, suit=suit)
+        const partnerSeqCard = AiHelpers.honorSequenceCard(player.partner.cards, suit)
+        const playerSeqCard = AiHelpers.honorSequenceCard(player.cards, suit)
         if (partnerSeqCard && playerSeqCard) {
-            const choosenPlayer = AiHelpers.teamPlayerWithLessCards(player.cards, player.partner.cards, suit=suit)
+            const choosenPlayer = AiHelpers.teamPlayerWithLessCards(player.cards, player.partner.cards, suit)
             return choosenPlayer == 'player' ? playerSeqCard : null;
         } else if (partnerSeqCard && !playerSeqCard) { // pass
         } else if (!partnerSeqCard && playerSeqCard) {
@@ -23,17 +23,17 @@ export default new class {
 
     winningPlay(player, opponent_cards, suit, trump=null, sequence_play=False) {
         // Play team winning cards if exist
-        const partnerWinningCard = AiHelpers.winningCard(player.partner.cards, opponent_cards, 'lowest', suit=suit, trump=trump)
-        const playerWinningCard = AiHelpers.winningCard(player.cards, opponent_cards, 'lowest', suit=suit, trump=trump)
+        const partnerWinningCard = AiHelpers.winningCard(player.partner.cards, opponent_cards, 'lowest', suit, trump)
+        const playerWinningCard = AiHelpers.winningCard(player.cards, opponent_cards, 'lowest', suit, trump)
         if (partnerWinningCard && playerWinningCard) {
-            const choosenPlayer = AiHelpers.teamPlayerWithLessCards(player.cards, player.partner.cards, suit=suit)
+            const choosenPlayer = AiHelpers.teamPlayerWithLessCards(player.cards, player.partner.cards, suit)
             return choosenPlayer == 'player' ? playerWinningCard : null;
         } else if (partnerWinningCard && !playerWinningCard) { // pass
         } else if (!partnerWinningCard && playerWinningCard) {
             return playerWinningCard;
         }
         // Check if there is a sequence
-        return sequence_play ? LogicReasoning.sequencePlay(player, suit) : null;
+        return sequence_play ? this.sequencePlay(player, suit) : null;
     }
 
     play(player, loop_cards, players, contract) {
@@ -55,16 +55,16 @@ export default new class {
                 if (teamTrumpCardsCount > opponentTrumpCardsCount && opponentTrumpCardsCount > 0) {
                     suitOrder = [trump].concat(suitOrder);
                 } else if (!hasContract && teamTrumpCardsCount > 0) {
-                    const orderBy = 'opponent_positive_count,winners,future_winners,count,trump'
-                    suitOrder = AiHelpers.suitsOrderedBy(player, startingTeamCards, teamCards, opponentCards, trump=trump, order_by=orderBy).map(s => s.suit);
+                    const orderBy = 'opponent_positive_count,winners,future_winners,count,trump';
+                    suitOrder = AiHelpers.suitsOrderedBy(player, startingTeamCards, teamCards, opponentCards, trump, orderBy).map(s => s.suit);
                 }
             }
             for (const suit of suitOrder) {
-                const playerWinningCard = LogicReasoning.winningPlay(player, opponentCards, suit, trump=trump, sequence_play=!hasContract);
+                const playerWinningCard = this.winningPlay(player, opponentCards, suit, trump, !hasContract);
                 if (playerWinningCard) return playerWinningCard;
                 // if player has cards of that suit
                 if (GameHelpers.hasCardsOfSuit(suit, player.cards)) {
-                    return AiHelpers.getSuitCard(player.cards, 'lowest', suit=suit);
+                    return AiHelpers.getSuitCard(player.cards, 'lowest', suit);
                 }
             }
         }
@@ -75,16 +75,16 @@ export default new class {
 
         // Player does not holds suit cards
         if (playerSuitCards.length == 0) {
-            const lowestSuits = AiHelpers.suitsOrderedBy(player, startingTeamCards, teamCards, opponentCards, trump=trump, order_by='trump,non_honors,delta_count,loosers,count');
+            const lowestSuits = AiHelpers.suitsOrderedBy(player, startingTeamCards, teamCards, opponentCards, trump, 'trump,non_honors,delta_count,loosers,count');
             for (const s of lowestSuits) {
                 if (s.suit != trump && s.player_count == 1 && s.winners == 1) continue
                 if (GameHelpers.hasCardsOfSuit(s.suit, player.cards)) {
-                    return AiHelpers.getSuitCard(player.cards, 'lowest', suit=s.suit);
+                    return AiHelpers.getSuitCard(player.cards, 'lowest', s.suit);
                 }
             }
             for (const s of lowestSuits) {
                 if (GameHelpers.hasCardsOfSuit(s.suit, player.cards)) {
-                    return AiHelpers.getSuitCard(player.cards, 'lowest', suit=s.suit);
+                    return AiHelpers.getSuitCard(player.cards, 'lowest', s.suit);
                 }
             }
         }
@@ -93,24 +93,24 @@ export default new class {
         if (playTurn == 2) {
             const opponentCard = loop_cards[0];
             const nextOpponentCards = GameHelpers.getNextOpponentCards(player.id, players);
-            const playerWinningCard = LogicReasoning.winningPlay(player, [opponentCard].concat(nextOpponentCards), loopSuit, trump=trump, sequence_play=!hasContract);
+            const playerWinningCard = this.winningPlay(player, [opponentCard].concat(nextOpponentCards), loopSuit, trump, !hasContract);
             if (playerWinningCard && playerWinningCard.value > opponentCard.value) return playerWinningCard;
-            return AiHelpers.getSuitCard(player.cards, 'lowest', suit=loopSuit);
+            return AiHelpers.getSuitCard(player.cards, 'lowest', loopSuit);
         } else if (playTurn == 3) {
             const [partnerCard, opponentCard] = loop_cards;
             const nextOpponentCards = GameHelpers.getNextOpponentCards(player.id, players);
             if (partnerCard.value < opponentCard.value) {
-                const winningCard = AiHelpers.winningCard(player.cards, nextOpponentCards, 'lowest', suit=loopSuit, trump=trump);
+                const winningCard = AiHelpers.winningCard(player.cards, nextOpponentCards, 'lowest', loopSuit, trump);
                 if (winningCard && winningCard.value > opponentCard.value) return winningCard;
             }
             // If partner card is an honor, play the lowest card, else the high card
-            return AiHelpers.getSuitCard(player.cards, (partnerCard.value > 10 || opponentCard.value > 10) ? 'lowest' : 'greater', suit=loopSuit)
+            return AiHelpers.getSuitCard(player.cards, (partnerCard.value > 10 || opponentCard.value > 10) ? 'lowest' : 'greater', loopSuit);
         } else {
             const [opponentOneCard, partnerCard, opponentTwoCard] = loop_cards;
             const opponentTopCard = opponentOneCard.value > opponentTwoCard.value ? opponentOneCard : opponentTwoCard;
-            const gtSuitCard = AiHelpers.greater_card(playerSuitCards, opponentTopCard);
+            const gtSuitCard = AiHelpers.greaterCard(playerSuitCards, opponentTopCard);
             if (partnerCard.value < opponentTopCard.value && gtSuitCard) return gtSuitCard;
-            else return AiHelpers.getSuitCard(player.cards, 'lowest', suit=loopSuit);
+            else return AiHelpers.getSuitCard(player.cards, 'lowest', loopSuit);
         }
     }
 }
