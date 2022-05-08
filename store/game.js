@@ -40,17 +40,9 @@ export const actions = {
         ctx.commit('UPDATE', {item: data});
         return;
     },
-    async saveGame(ctx) {
-        return;
-    },
-    async loadSavedGame(ctx) {
-        const data = await GameAPIs.loadSavedGame();
+    async loadGame(ctx, savedGame) {
+        const data = await GameAPIs.loadGame(savedGame);
         ctx.commit('UPDATE', {item: data});
-        return;
-    },
-    async loadGame(ctx) {
-        // const data = await GameAPIs.loadGame();
-        // ctx.commit('UPDATE', {item: data});
         return;
     },
     async getGame(ctx) {
@@ -58,11 +50,13 @@ export const actions = {
         ctx.commit('UPDATE', {item: data});
         return;
     },
-    async updateGame(ctx) {
-
-    },
     async nextRuns(ctx, {runs}) {
         const data = await GameAPIs.nextStep(runs);
+        ctx.commit('UPDATE', {item: data});
+        return;
+    },
+    async autoContract(ctx) {
+        const data = await GameAPIs.autoContract();
         ctx.commit('UPDATE', {item: data});
         return;
     },

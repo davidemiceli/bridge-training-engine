@@ -3,9 +3,10 @@
 import GameHelpers from '@/libs/gameHelpers';
 import Game from '@/libs/classes/game';
 import PlayEngine from '@/libs/playEngine';
+import AutoContract from '@/libs/AI/autoContract';
 
 
-class GameEngine {
+export default new class {
 
     constructor() { }
 
@@ -33,8 +34,6 @@ class GameEngine {
 
     play(s, {card, bid, auto}) {
         // Play next step
-        // Get required state data
-        // card = card && new Card(card);
         const { players, contract } = s;
         const currentPlayedCards = s.currentPlayedCards();
         const p = GameHelpers.getPlayer(players, s.current_player);
@@ -124,6 +123,23 @@ class GameEngine {
             winningBid.redouble = true;
         }
         return winningBid;
+    }
+
+    autoContract(s) {
+        const { players } = s;
+        const [ playerId, teamId, points, trump ] = AutoContract.bestContract(players);
+        const bidValue = GameHelpers.tricksByTeamPoints(points);
+        const bidId = GameHelpers.createBidId(bidValue, trump);
+        const loopPlayers = GameHelpers.loopPlayers(playerId);
+        for (const p of loopPlayers) {
+            const bid = GameHelpers.createBid(p, p == playerId ? bidId : 'pass');
+            s.addBid(bid);
+        }
+        const contract = this.defineContract(s.bids);
+        s.addContract(contract);
+        this.setDummyPlayer(contract, players);
+        s.setCurrentPlayer(GameHelpers.getNextPlayer(playerId));
+        return s;
     }
 
     biddingPhase(s, players, player, player_bid, auto) {
@@ -253,5 +269,3 @@ class GameEngine {
     }
 
 }
-
-export default new GameEngine();

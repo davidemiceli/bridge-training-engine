@@ -10,11 +10,11 @@ class GameAPIs {
     }
 
     _storeGameState(data) {
-        localStorage.setItem(this.storeKey, JSON.stringify(data));
+        sessionStorage.setItem(this.storeKey, JSON.stringify(data));
     }
 
     _getGameState() {
-        const data = localStorage.getItem(this.storeKey);
+        const data = sessionStorage.getItem(this.storeKey);
         const s = JSON.parse(data);
         return GameEngine.load(s);
     }
@@ -41,16 +41,10 @@ class GameAPIs {
         return s;
     }
 
-    async loadSavedGame() {
-        throw Error('Not implemented yet!');
-    }
-
-    async saveGame() {
-        throw Error('Not implemented yet!');
-    }
-
-    async loadGame() {
-        throw Error('Not implemented yet!');
+    async loadGame(data) {
+        const s = GameEngine.load(data);
+        this._storeGameState(s);
+        return s
     }
 
     async undo(steps) {
@@ -66,6 +60,13 @@ class GameAPIs {
         const s = this._getGameState();
         const nextS = GameEngine.play(s, {card, bid, auto});
         nextS.setTimerClock(newTimer);
+        this._storeGameState(nextS);
+        return nextS;
+    }
+
+    async autoContract() {
+        const s = this._getGameState();
+        const nextS = GameEngine.autoContract(s);
         this._storeGameState(nextS);
         return nextS;
     }

@@ -11,6 +11,7 @@
           <p v-else class="title is-2">Sorry, an error occurred</p>
           <NuxtLink to="/" class="mt-6 button is-light has-text-weight-bold">Come back to Home</NuxtLink>
       </div>
+      <Footer />
   </div>
 </template>
 

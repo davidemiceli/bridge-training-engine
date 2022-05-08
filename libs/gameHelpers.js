@@ -28,6 +28,10 @@ export default new class {
 
     constructor() { }
 
+    timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     showError(err, alertModal) {
         const errmsg = typeof(err) == 'string' ? err : (err && err.response && err.response.data && err.response.data.message) || 'Internal server error, contact the administrator';
         alertModal.show(errmsg);
@@ -47,6 +51,16 @@ export default new class {
             return permArr;
         };
         return permute(arr);
+    }
+
+    combinations(items, m) {
+        const arr = items.map(String);
+        const max = (m || arr.length), min = 1;
+        const combos = [...Array(max).keys()]
+            .reduce(result => arr.concat(result.flatMap(val => arr.map(char => val + '|' + char))), [])
+            .filter(val => val.length >= min);
+        const notUnique = combos.map(v => v.split('|').sort()).map(v => v.join('|'));
+        return Array.from(new Set(notUnique)).map(v => v.split('|')).filter(v => v.length == new Set(v).size);
     }
 
     chunk(arr, len) {
@@ -160,10 +174,15 @@ export default new class {
         return card_unicode[card_id];
     }
 
-    parseCardOrBidId(c_id, player_id) {
+    createBidId(value, trump) {
+        if (['double', 'redouble'].includes(value)) return value;
+        return [0, 'pass'].includes(value) ? 'pass' : `${value} ${trump}`;
+    }
+
+    parseCardOrBidId(card_id, player_id) {
         return {
-            suit: c_id.match(/[a-zA-Z]+/g)[0],
-            value: c_id.match(/\d+/g)[0],
+            suit: card_id.match(/[a-zA-Z]+/g)[0],
+            value: card_id.match(/\d+/g)[0],
             player_id: player_id
         };
     }
@@ -234,6 +253,10 @@ export default new class {
         return players.filter(p => p.id == nextOpponentId)[0].cards.slice(0);
     }
 
+    getTeamCards(team_id, cards) {
+        return cards.filter(c => this.getPlayerTeam(c.player_id) == team_id);
+    }
+
     equalTeam(player_one, player_two) {
         return this.getPlayerTeam(player_one) === this.getPlayerTeam(player_two);
     }
@@ -281,14 +304,14 @@ export default new class {
     }
 
     tricksByTeamPoints(points) {
-        if (points >= 20 && points <= 22) return 1
-        else if (points >= 23 && points <= 24) return 2
-        else if (points >= 25 && points <= 27) return 3
-        else if (points >= 28 && points <= 30) return 4
-        else if (points >= 31 && points <= 32) return 5
-        else if (points >= 33 && points <= 36) return 6
-        else if (points >= 37) return 7
-        else return 0
+        if (points >= 20 && points <= 22) return 1;
+        else if (points >= 23 && points <= 24) return 2;
+        else if (points >= 25 && points <= 27) return 3;
+        else if (points >= 28 && points <= 30) return 4;
+        else if (points >= 31 && points <= 32) return 5;
+        else if (points >= 33 && points <= 36) return 6;
+        else if (points >= 37) return 7;
+        else return 0;
     }
 
     getTrickWinner(trickCards) {
@@ -353,13 +376,17 @@ export default new class {
         return [tp[1].team, tp[1].points];
     }
 
+    countCardsPoints(cards) {
+        return cards.reduce((a, c) => a + (c.value > 10 ? (c.value - 10) : 0), 0);
+    }
+
     randomizeCards(cards) {
         const n = Math.floor(Math.random() * 1000) + 1;
         for (const _ of Array.from(Array(n).keys())) {
-            const random_kind = Math.random();
-            if (random_kind >= 0 && random_kind <= 0.333) {
+            const randomKind = Math.random();
+            if (randomKind >= 0 && randomKind <= 0.333) {
                 cards = this.shuffleArray(cards);
-            } else if (random_kind > 0.333 && random_kind <= 0.666) {
+            } else if (randomKind > 0.333 && randomKind <= 0.666) {
                 cards.sort(() => Math.random() - 0.5);
             } else {
                 cards.sort(() => Math.floor(Math.random() * 8) - 2);
@@ -373,73 +400,21 @@ export default new class {
         let cards = [];
         const suits = this.shuffleArray(this.suits());
         for (const s of suits) {
-            const suit_values = this.shuffleArray(Array.from(Array(15).keys()).slice(2));
-            for (const v of suit_values) {
+            const suitValues = this.shuffleArray(Array.from(Array(15).keys()).slice(2));
+            for (const v of suitValues) {
                 cards.push({card_id: [s, v].join(''), suit: s, value: v, player_id: null});
             }
         }
         cards = this.randomizeCards(cards);
-        const card_deck = [];
+        const cardDeck = [];
         while(cards.length) {
-            for (const p_id of players) {
+            for (const p of players) {
                 const c = cards.pop();
-                c.player_id = p_id;
-                card_deck.push(c);
+                c.player_id = p;
+                cardDeck.push(c);
             }
         }
-        return card_deck;
-    }
-
-    inferCards(decks, contract_data) {
-        const contract = Object.assign({}, contract_data);
-        const suits = this.shuffleArray(this.suits());
-        const placeholders = ['x', 'y', 'z', 't'];
-        const all_card_values = placeholders.reduce((acc, p) => {
-            acc[p] = this.shuffleArray(Array.from(Array(15).keys()).slice(2));
-            return acc;
-        }, {});
-        const suits_in_deck = {};
-        const placeholders_in_deck = {};
-        const cards = [];
-        for (const [player_id, card_deck] of Object.entries(decks)) {
-            for (const c of card_deck) {
-                const c_suit = c.match(/[a-zA-Z]+/g)[0];
-                const has_value = c.match(/\d+/g) ? true : false;
-                const c_value =  (!has_value && !suits.includes(c_suit)) ? all_card_values[c_suit].pop() : parseInt(c.match(/\d+/g)[0]);
-                if (suits.includes(c_suit)) suits_in_deck[c_suit] = true;
-                if (placeholders.includes(c_suit)) placeholders_in_deck[c_suit] = true;
-                cards.push({
-                    card_id: [c_suit, c_value].join(''),
-                    suit: c_suit,
-                    value: c_value,
-                    player_id: player_id
-                });
-            }
-        }
-        const only_ids = cards.map(c => c.card_id);
-        if ((new Set(only_ids)).size !== only_ids.length) throw Error('Duplicated card values!');
-        const deck_suits = Object.keys(suits_in_deck);
-        const non_deck_suits = this.shuffleArray(suits.filter(s => !deck_suits.includes(s)));
-        const suit_remapping = Object.keys(placeholders_in_deck).reduce((acc, s, i) => {
-            acc[s] = non_deck_suits[i];
-            return acc;
-        }, {});
-        // Remap suit placeholder in contract
-        // let contract_item = null;
-        if (contract && contract.bid) {
-            const contract_suit = contract.bid.match(/[a-zA-Z]+/g)[0];
-            if (contract_suit in suit_remapping) contract.bid = contract.bid.replace(contract_suit, suit_remapping[contract_suit]);
-            // const [value, trump] = contract.bid.split(' ');
-            // contract_item = {player_id: contract.player_id, value, trump};
-        }
-        // Remap suit placeholders in cards
-        cards.forEach(c => {
-            if (c.suit in suit_remapping) {
-                c.card_id = c.card_id.replace(c.suit, suit_remapping[c.suit]);
-                c.suit = suit_remapping[c.suit];
-            }
-        });
-        return [contract, cards];
+        return cardDeck;
     }
 
     loopNextPlayer(player_id) {

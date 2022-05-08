@@ -55,7 +55,7 @@
 
             <footer class="modal-card-foot" style="justify-content: center;">
                 <NuxtLink to="" class="button is-medium" @click.native="onClickClose()">Close</NuxtLink>
-                <NuxtLink to="/section/new" class="button is-medium is-success">New game</NuxtLink>
+                <NuxtLink to="/game/new" class="button is-medium is-success">New game</NuxtLink>
             </footer>
 
         </div>

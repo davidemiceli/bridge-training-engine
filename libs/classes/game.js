@@ -9,8 +9,11 @@ import Player from '@/libs/classes/player';
 export default class {
 
     constructor(data) {
+        const version = 0.1;
         if (data.id === undefined) this.id = uuidv4();
         if (data.timer_clock === undefined) this.timer_clock = moment().set({hour:0, minute:0, second:0, millisecond:0});
+        if (data.version && data.version != version) throw Error('Incompatible game version.');
+        this.version = version;
         this.settings = {};
         this.status_msg = [];
         this.bids = [];
@@ -90,8 +93,6 @@ export default class {
     completedLoopsCards() {
         const chunked = GameHelpers.chunk(this.cards, 4);
         return chunked.filter(t => t.length == 4);
-        // const lastChunk = chunked.slice(-1)[0] || [];
-        // return (chunked.length > 0 && lastChunk.length < 4) ? lastChunk : chunked;
     }
 
     currentPlayedCards() {

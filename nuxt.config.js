@@ -69,6 +69,6 @@ export default {
   build: {
   },
 
-  loading: '@/components/loadingBar.vue'
+  loading: '@/components/LoadingBar.vue'
 
 }

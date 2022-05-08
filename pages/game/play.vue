@@ -3,7 +3,7 @@
     <div>
 
         <AlertModal ref="alertModal" />
-        <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.done_perc @cancelClicked='taskPlayOpts.cancel = true' />
+        <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.donePerc @cancelClicked='taskPlayOpts.cancel = true' />
         <ScoreModal :score=gameState.score :contract=gameState.contract @onClickClose="scoreModalToggle" v-if="handEnded && scoreModalOpen" />
 
         <nav class="container panel">
@@ -15,7 +15,8 @@
             <div class="panel-block is-block">
                 
                 <div class="buttons is-centered">
-                    <button class="button is-light is-success has-text-weight-bold" @click="playAuto"><span class="icon is-small material-icons mr-1">precision_manufacturing</span> AI play</button>
+                    <button class="button is-light is-success has-text-weight-bold" @click="autoContract" v-if='!contractWasDefined'><span class="icon is-small material-icons mr-1">gavel</span> Auto Contract</button>
+                    <button class="button is-light is-success has-text-weight-bold" @click="playAuto" v-if='contractWasDefined'><span class="icon is-small material-icons mr-1">precision_manufacturing</span> AI play</button>
                     <button class="button is-light has-text-weight-bold" @click="playUndo"><span class="icon is-small material-icons mr-1">replay</span> Undo</button>
                     <button class="button is-light has-text-weight-bold" @click="playSolve"><span class="icon is-small material-icons mr-1">auto_awesome</span> AI solve</button>
                     <button class="button is-light has-text-weight-bold" @click="playUndoAll"><span class="icon is-small material-icons mr-1">restart_alt</span> Undo all</button>
@@ -104,7 +105,7 @@ export default {
             scoreModalOpen: true,
             alertMsg: null,
             originalLoop: [],
-            taskPlayOpts: {title: '', active: false, cancel: false, steps: 0, done_perc: 0},
+            taskPlayOpts: {title: '', active: false, cancel: false, steps: 0, donePerc: 0},
             uiPlayOpts: {
                 shapeKind: 'cards',
                 gameAnalysis: false
@@ -117,6 +118,7 @@ export default {
             updateTimerClock: 'game/updateTimerClock',
             applyUiPlayOptions: 'game/applyUiPlayOptions',
             saveGame: 'game/saveGame',
+            autoContract: 'game/autoContract',
             play: 'game/play',
             undo: 'game/undo'
         }),
@@ -175,7 +177,7 @@ export default {
                     await this.undo({steps: 1});
                     await GameHelpers.delay(200);
                     taskPlayOpts.steps = 13 - this.gameState.tricks.length;
-                    taskPlayOpts.done_perc = Math.round((taskPlayOpts.steps / 13) * 100);
+                    taskPlayOpts.donePerc = Math.round((taskPlayOpts.steps / 13) * 100);
                     if ((taskPlayOpts.steps == 13 && this.gameState.bids.length == 0) || taskPlayOpts.cancel) break;
                 }
             } catch(err) {
@@ -187,16 +189,17 @@ export default {
             return true;
         },
         async playSolve() {
-            const { taskPlayOpts } = this;
+            const { taskPlayOpts, contractWasDefined } = this;
             try {
                 taskPlayOpts.title = 'Auto play';
                 taskPlayOpts.steps = this.gameState.tricks.length;
                 taskPlayOpts.active = true;
+                if (!contractWasDefined) this.autoContract();
                 while(true) {
                     await this.play({auto: true});
                     await GameHelpers.delay(200);
                     taskPlayOpts.steps = this.gameState.tricks.length;
-                    taskPlayOpts.done_perc = Math.round((taskPlayOpts.steps / 13) * 100);
+                    taskPlayOpts.donePerc = Math.round((taskPlayOpts.steps / 13) * 100);
                     if (this.handEnded || taskPlayOpts.cancel) break;
                 }
             } catch(err) {
@@ -207,11 +210,14 @@ export default {
             taskPlayOpts.active = false;
             return true;
         },
-        async saveGameCheckpoint() {
-            this.$nuxt.$loading.start();
-            await this.saveGame();
-            this.$nuxt.$loading.finish();
-            return true;
+        saveGameCheckpoint() {
+            const { gameState } = this;
+            const data = JSON.stringify(gameState, null, 4);
+            const blob = new Blob([data], {type: 'application/json'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "game.json";
+            link.click();
         },
         async playUndo(e) {
             // Undo last played card

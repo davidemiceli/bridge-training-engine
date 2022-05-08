@@ -11,7 +11,7 @@ export default async function(self) {
         } catch(err) {
             console.error(err);
             self.$nuxt.$loading.finish();
-            return self.$router.push({path: '/section/new'});
+            return self.$router.push({path: '/game/new'});
         }
     });
     return;

@@ -25,14 +25,15 @@
                         <span class="material-icons mr-2">sports_esports</span>Game
                     </a>
                     <div class="navbar-dropdown">
-                        <NuxtLink class="navbar-item" to="/section/new"><span class="material-icons mr-1">add_circle_outline</span>New</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/new"><span class="material-icons mr-1">add_circle_outline</span>New</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/play"><span class="material-icons mr-1">play_arrow</span>Play</NuxtLink>
+                        <!-- <NuxtLink class="navbar-item" to="/game/gamesettings"><span class="material-icons mr-1">settings</span>Settings</NuxtLink> -->
                         <hr class="navbar-divider">
-                        <NuxtLink class="navbar-item" to="/section/play"><span class="material-icons mr-1">play_arrow</span>Play</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/gamesettings"><span class="material-icons mr-1">settings</span>Settings</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/tricks"><span class="material-icons mr-1">front_hand</span>Tricks</NuxtLink>
                         <hr class="navbar-divider">
-                        <NuxtLink class="navbar-item" to="/section/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/section/tricks"><span class="material-icons mr-1">front_hand</span>Tricks</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/support"><span class="material-icons mr-1">support</span>Support</NuxtLink>
                     </div>
                 </div>
 

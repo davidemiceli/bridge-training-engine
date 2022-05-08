@@ -72,14 +72,14 @@ export default new class {
         const players = GameHelpers.loopPlayers('north');
         let winners = 0;
         while (cards.length > 0) {
-            const max_card = this.getSuitCard(cards, 'greater', suit);
-            winners += team_ids.includes(max_card.player_id) ? 1 : 0;
-            cards = cards.filter(c => c.card_id != max_card.card_id);
+            const maxCard = this.getSuitCard(cards, 'greater', suit);
+            winners += team_ids.includes(maxCard.player_id) ? 1 : 0;
+            cards = cards.filter(c => c.card_id != maxCard.card_id);
             for (const p of players) {
-                if (p != max_card.player_id) {
-                    const min_card = this.getSuitCard(cards.filter(c => c.player_id == p), 'lowest', suit=suit);
-                    if (min_card != null) {
-                        cards = cards.filter(c => min_card && c.card_id != min_card.card_id);
+                if (p != maxCard.player_id) {
+                    const minCard = this.getSuitCard(cards.filter(c => c.player_id == p), 'lowest', suit=suit);
+                    if (minCard != null) {
+                        cards = cards.filter(c => minCard && c.card_id != minCard.card_id);
                     }
                 }
             }
@@ -157,50 +157,52 @@ export default new class {
         for (const suits of suitPermutations) {
             cards = team_cards.concat(opponent_cards);
             let winners = 0;
-            let future_winners = 0;
+            let futureWinners = 0;
             for (const suit of suits) {
-                future_winners = this.countFutureWinners(teamIds, suit, this.getCardsWithSuit(suit, cards));
+                futureWinners = this.countFutureWinners(teamIds, suit, this.getCardsWithSuit(suit, cards));
                 while (cards.filter(c => c.suit == suit).length > 0) {
-                    const max_card = this.getSuitCard(cards, 'greater', suit);
-                    const max_card_player_partner = String(GameHelpers.getPartnerId(max_card.player_id));
-                    const max_card_team = [max_card.player_id, max_card_player_partner];
-                    winners += teamIds.includes(max_card.player_id) ? 1 : 0;
-                    cards = cards.filter(c => c.card_id != max_card.card_id);
-                    const opponent_max_card = this.getSuitCard(cards.filter(c => !(max_card_team.includes(c.player_id))), 'greater', suit);
-                    const min_cards = [];
+                    const maxCard = this.getSuitCard(cards, 'greater', suit);
+                    const maxCardPlayerPartner = String(GameHelpers.getPartnerId(maxCard.player_id));
+                    const maxCardTeam = [maxCard.player_id, maxCardPlayerPartner];
+                    winners += teamIds.includes(maxCard.player_id) ? 1 : 0;
+                    cards = cards.filter(c => c.card_id != maxCard.card_id);
+                    const opponentMaxCard = this.getSuitCard(cards.filter(c => !(maxCardTeam.includes(c.player_id))), 'greater', suit);
+                    const minCards = [];
                     for (const p of players) {
-                        if (p != max_card.player_id) {
-                            let min_card;
-                            if (opponent_max_card && p == opponent_max_card.player_id) {
-                                min_card = opponent_max_card;
+                        if (p != maxCard.player_id) {
+                            let minCard = null;
+                            if (opponentMaxCard && p == opponentMaxCard.player_id) {
+                                minCard = opponentMaxCard;
                             } else {
-                                min_card = this.getSuitCard(cards.filter(c => c.player_id == p), 'lowest', suit);
+                                minCard = this.getSuitCard(cards.filter(c => c.player_id == p), 'lowest', suit);
                             }
-                            if (min_card == null) {
+                            if (minCard == null) {
                                 const lowestSuits = this.suitsOrderedBy(player, starting_team_cards, team_cards, opponent_cards, null, 'trump,non_honors,delta_count,loosers,count');
                                 for (const s of lowestSuits) {
                                     if (s.player_count == 1 && s.winners == 1) continue;
                                     if (GameHelpers.hasCardsOfSuit(s.suit, player.cards)) {
-                                        min_card = this.getSuitCard(player.cards, 'lowest', s.suit);
+                                        minCard = this.getSuitCard(player.cards, 'lowest', s.suit);
                                     }
                                 }
-                                for (const s of lowestSuits) {
-                                    if (GameHelpers.hasCardsOfSuit(s.suit, player.cards)) {
-                                        min_card = this.getSuitCard(player.cards, 'lowest', s.suit);
+                                if (minCard == null) {
+                                    for (const s of lowestSuits) {
+                                        if (GameHelpers.hasCardsOfSuit(s.suit, player.cards)) {
+                                            minCard = this.getSuitCard(player.cards, 'lowest', s.suit);
+                                        }
                                     }
                                 }
-                                cards = cards.filter(c => min_card && c.card_id != min_card.card_id);
+                                cards = cards.filter(c => minCard && c.card_id != minCard.card_id);
                             }
-                            if (min_card) min_cards.push(min_card);
+                            if (minCard) minCards.push(minCard);
                         }
                     }
-                    const cutted = min_cards.filter(c => c.suit == trump).length > 0;
-                    winners += teamIds.includes(max_card.player_id) && !cutted ? 1 : 0;
+                    const cutted = minCards.filter(c => c.suit == trump).length > 0;
+                    winners += teamIds.includes(maxCard.player_id) && !cutted ? 1 : 0;
                 }
             }
-            results.push({winners, future_winners, suits_order: suits});
+            results.push({winners, future_winners: futureWinners, suits_order: suits});
         }
-        results.sort((a, b) => (b.winners - a.winners) || (b.future_winners - a.future_winners))
+        results.sort((a, b) => (b.winners - a.winners) || (b.future_winners - a.future_winners));
         return results[0].suits_order;
     }
 
