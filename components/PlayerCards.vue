@@ -10,7 +10,7 @@
         <tbody>
             <tr v-for="p in playersData" :key=p.id v-show="p.cards.length > 0">
                 <td class="is-size-6 has-text-weight-bold is-capitalized is-vcentered p-0">{{p.id}}</td>
-                <td v-for="suit in suitValues" :key=suit class="p-1 is-vcentered">
+                <td v-for="suit in suitValues" :key=suit class="p-1 is-vcentered card-shape">
                     <span class="is-size-3" v-bind:class="[suitColor(suit)]" v-for="c in getCards(suit, p.cards)" :key=c.card_id>{{cardUnicode(c.card_id)}}</span>
                 </td>
                 <td v-if="showPoints" class="p-0 is-size-6 is-italic is-uppercase is-vcentered">{{calculatePlayerPoints(p)}}</td>

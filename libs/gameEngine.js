@@ -3,9 +3,10 @@
 import GameHelpers from '@/libs/gameHelpers';
 import Game from '@/libs/classes/game';
 import PlayEngine from '@/libs/playEngine';
+import AutoContract from '@/libs/AI/autoContract';
 
 
-class GameEngine {
+export default new class {
 
     constructor() { }
 
@@ -33,8 +34,6 @@ class GameEngine {
 
     play(s, {card, bid, auto}) {
         // Play next step
-        // Get required state data
-        // card = card && new Card(card);
         const { players, contract } = s;
         const currentPlayedCards = s.currentPlayedCards();
         const p = GameHelpers.getPlayer(players, s.current_player);
@@ -54,7 +53,7 @@ class GameEngine {
                     pNext.activateDummy();
                 }
             }
-            // Calculate tricks FIXME:
+            // Calculate tricks
             const tricks = this.createTricks(contract.trump, s.completedLoopsCards());
             s.updateTricks(tricks);
         } else {
@@ -77,7 +76,8 @@ class GameEngine {
     nextStep(runs) { }
 
     getNextPlayer(player_id, players) {
-        return GameHelpers.getPlayer(players, GameHelpers.getNextPlayer(player_id));
+        const nextPlayerId = GameHelpers.getNextPlayer(player_id);
+        return GameHelpers.getPlayer(players, nextPlayerId);
     }
 
     getNextPlayerToPlay(s) {
@@ -125,6 +125,23 @@ class GameEngine {
         return winningBid;
     }
 
+    autoContract(s) {
+        const { players } = s;
+        const [ playerId, teamId, points, trump ] = AutoContract.bestContract(players);
+        const bidValue = GameHelpers.tricksByTeamPoints(points);
+        const bidId = GameHelpers.createBidId(bidValue, trump);
+        const loopPlayers = GameHelpers.loopPlayers(playerId);
+        for (const p of loopPlayers) {
+            const bid = GameHelpers.createBid(p, p == playerId ? bidId : 'pass');
+            s.addBid(bid);
+        }
+        const contract = this.defineContract(s.bids);
+        s.addContract(contract);
+        this.setDummyPlayer(contract, players);
+        s.setCurrentPlayer(GameHelpers.getNextPlayer(playerId));
+        return s;
+    }
+
     biddingPhase(s, players, player, player_bid, auto) {
         // Bidding phase: choose contract from bid of players
         // Check if bidding is ready to define a contract
@@ -161,8 +178,8 @@ class GameEngine {
         const loopSuit = GameHelpers.getLoopSuit(loop_cards);
         const playerSuitCards = GameHelpers.filterCardsBySuit(loopSuit, player.cards);
         if (auto) {
-            card = PlayEngine.randomPlay(player, loop_cards);
-            // card = PlayEngine.logicReasoning(player, loop_cards, players, contract);
+            // card = PlayEngine.randomPlay(player, loop_cards);
+            card = PlayEngine.logicReasoning(player, loop_cards, players, contract);
         }
         if (card.suit != loopSuit && playerSuitCards.length > 0) {
             throw Error(`Player can not play ${card.suit} cards having ${loopSuit} cards yet!`);
@@ -252,5 +269,3 @@ class GameEngine {
     }
 
 }
-
-export default new GameEngine();
