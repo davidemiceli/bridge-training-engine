@@ -45,3 +45,12 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
+
+### Testing
+
+To test core application functions, there are unit tests.
+
+```bash
+# run unit tests
+$ npm run test
+```

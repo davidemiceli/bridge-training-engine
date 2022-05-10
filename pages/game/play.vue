@@ -16,10 +16,10 @@
                 
                 <div class="buttons is-centered">
                     <button class="button is-light is-success has-text-weight-bold" @click="autoContract" v-if='!contractWasDefined'><span class="icon is-small material-icons mr-1">gavel</span> Auto Contract</button>
-                    <button class="button is-light is-success has-text-weight-bold" @click="playAuto" v-if='contractWasDefined'><span class="icon is-small material-icons mr-1">precision_manufacturing</span> AI play</button>
+                    <button class="button is-light is-success has-text-weight-bold" @click="playAuto" v-if='contractWasDefined'><span class="icon is-small material-icons mr-1">precision_manufacturing</span> AI Play</button>
                     <button class="button is-light has-text-weight-bold" @click="playUndo"><span class="icon is-small material-icons mr-1">replay</span> Undo</button>
-                    <button class="button is-light has-text-weight-bold" @click="playSolve"><span class="icon is-small material-icons mr-1">auto_awesome</span> AI solve</button>
-                    <button class="button is-light has-text-weight-bold" @click="playUndoAll"><span class="icon is-small material-icons mr-1">restart_alt</span> Undo all</button>
+                    <button class="button is-light has-text-weight-bold" @click="playSolve"><span class="icon is-small material-icons mr-1">auto_awesome</span> AI Solve</button>
+                    <button class="button is-light has-text-weight-bold" @click="playUndoAll"><span class="icon is-small material-icons mr-1">restart_alt</span> Undo All</button>
                     <button class="button is-light has-text-weight-bold" @click="scoreModalToggle" v-if="handEnded"><span class="icon is-small material-icons has-text-warning-dark mr-1">emoji_events</span> Results</button>
                     <button class="button is-light is-info has-text-weight-bold" @click="saveGameCheckpoint"><span class="icon is-small material-icons mr-1">save</span> Save</button>
                     <button class="button is-light is-warning has-text-weight-bold" @click="setUiPlayOpts('gameAnalysis', !uiPlayOpts.gameAnalysis)">

@@ -33,9 +33,7 @@ export default class {
         this.players = players.map(p => {
             const partnerId = GameHelpers.getPartnerId(p.id);
             const partner = GameHelpers.getPlayer(players, partnerId);
-            const pl = new Player(p);
-            pl.addPartner(partner);
-            return pl;
+            return new Player(p);
         });
     }
 

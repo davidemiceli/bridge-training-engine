@@ -219,14 +219,22 @@ export default new class {
         return this.shuffleArray(Object.keys(player_partners))[0];
     }
 
-    getRandomOpponentId(player_id) {
+    getOpponentIds(player_id) {
         const partner_id = this.getPartnerId(player_id);
-        const opponents = Object.keys(player_partners).filter(p_id => p_id != player_id && p_id != partner_id);
-        return this.shuffleArray(opponents)[0];
+        return Object.keys(player_partners).filter(p_id => p_id != player_id && p_id != partner_id);
+    }
+
+    getRandomOpponentId(player_id) {
+        return this.shuffleArray(this.getOpponentIds(player_id))[0];
     }
 
     getPartnerId(player_id) {
         return player_partners[player_id];
+    }
+
+    getPartner(player_id, players) {
+        const partnerId = this.getPartnerId(player_id);
+        return players.filter(p => p.id == partnerId)[0];
     }
 
     getPlayerTeam(player_id) {

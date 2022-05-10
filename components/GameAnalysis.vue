@@ -9,7 +9,7 @@
         </div>
 
         <div class="columns is-multiline is-mobile" v-if='trickIndex != null'>
-            <div class="column is-3 has-text-centered pb-0" v-for="c in selectedTrickCards" :key=c.card_id>
+            <div class="column is-3 has-text-centered pb-0" v-for="c in selectedTrickCards" :key=c.player_id>
                 <div class="is-uppercase has-text-weight-bold">{{c.player_id}}</div>
             </div>
             <div class="column is-3 has-text-centered pt-0" v-for="c in selectedTrickCards" :key=c.card_id>

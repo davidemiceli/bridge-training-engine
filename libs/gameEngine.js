@@ -198,7 +198,8 @@ export default new class {
     setDummyPlayer(contract, players) {
         // Set who is the dummy player
         const contractP = GameHelpers.getPlayer(players, contract.player_id);
-        const p = GameHelpers.getPlayer(players, contractP.partner.id);
+        const contractPlayerPartner = GameHelpers.getPartner(contractP.id, players);
+        const p = GameHelpers.getPlayer(players, contractPlayerPartner.id);
         p.setDummy(true);
     }
 

@@ -11,14 +11,9 @@ export default class {
         this.card_deck = data.cards || [];
         this.bid = null;
         this.last_bid = null;
-        this.partner = {};
         if (data) {
             Object.assign(this, data);
         }
-    }
-
-    addPartner(p) {
-        this.partner = p;
     }
 
     setDummy(v) {
