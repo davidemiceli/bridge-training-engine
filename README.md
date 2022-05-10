@@ -5,8 +5,11 @@
 </p>
 <h2 align="center">Bridge Training Engine</h2>
 <p align="center"><em>A Free and Open Source platform for Bridge training.</em></p>
+<p align="center"><a href="https://davidemiceli.github.io/bridge-training-engine"><em>https://davidemiceli.github.io/bridge-training-engine</em></a></p>
 
 ## Getting Started
+
+The application is available for play at https://davidemiceli.github.io/bridge-training-engine.
 
 ### Requirements
 
