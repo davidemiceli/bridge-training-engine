@@ -9,8 +9,6 @@
 
 ## Getting Started
 
-The application is available for play at https://davidemiceli.github.io/bridge-training-engine.
-
 ### Requirements
 
 - Node.js v16.14+
@@ -57,3 +55,13 @@ To test core application functions, there are unit tests.
 # run unit tests
 $ npm run test
 ```
+
+### Try application live
+
+The application is available at https://davidemiceli.github.io/bridge-training-engine.
+
+### License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2022-present, Davide Miceli

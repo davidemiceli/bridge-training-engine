@@ -25,25 +25,33 @@
         </div>
         <div class="buttons is-right">
             <button class="button light-shadow is-success has-text-weight-bold is-capitalized" @click="newRule()">Apply rule</button>
+            <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanRule()">Clean rule</button>
             <button class="button light-shadow is-light has-text-weight-bold" @click="goToSupport('rules')">
                 <span class="icon is-small material-icons-outlined mr-1">info</span> Learn More on Rules
             </button>
         </div>
         <div class="buttons">
+            <button class="button light-shadow is-light has-text-weight-bold" @click="toggleShowCard()">
+                <span v-if="showCards" class="icon is-small material-icons-outlined">visibility_off</span>
+                <span v-if="!showCards" class="icon is-small material-icons-outlined">visibility</span>
+            </button>
             <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="loadCustomCardsTrigger()">Load cards from file</button>
             <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanCustomCardDeck()">Clean all cards</button>
             <button class="button light-shadow is-info has-text-weight-bold is-capitalized" @click="createRandomCardDeck()">Random cards</button>
+            <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="cardsToRule()" v-if="gameCustoms.cards.length > 0">Edit as rule</button>
+            <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="downloadCardDeck()" v-if="gameCustoms.cards.length > 0">Export Card Deck</button>
         </div>
-        <PlayerCards :players=customPlayerCards :onlyRemainingCards='false' :showPoints='true' class="mb-3 is-fullwidth is-bordered" />
+        <PlayerCards :players=customPlayerCards :onlyRemainingCards='false' :showPoints='true' class="mb-3 is-fullwidth is-bordered" v-if="showCards" />
 
         <input class="is-hidden" ref="fileCardsInput" type="file" name="customCardFile" accept="application/json" @change="loadCustomCardDeck($event)">
         <input class="is-hidden" ref="fileGameInput" type="file" name="gameFile" accept="application/json" @change="loadSavedGame($event)">
 
-        <div class="block" v-if="selectedScoreRange.team">
+        <div class="block" v-if="selectedScoreRange.team && showCards">
             <div class="has-text-centered is-size-6 is-italic">
                 The top team is <span class="is-capitalized">{{selectedScoreRange.team}}</span> with {{selectedScoreRange.points}} total HCP.
             </div>
         </div>
+        <hr class="hr" v-if="!showCards">
         <div class="buttons is-centered">
             <button class="button light-shadow is-success is-medium has-text-weight-bold is-capitalized" @click="createNewGame()">Play</button>
             <button class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" @click="loadSavedGameTrigger()">Load Game</button>
@@ -61,6 +69,7 @@ export default {
     layout: 'play',
     data: function() {
         return {
+            showCards: true,
             selectedPredefinedRule: 0,
             ruleExamples: RuleExamples,
             rule: '',
@@ -70,25 +79,31 @@ export default {
         }
     },
     methods: {
-        suitColor: function(suit) {
+        toggleShowCard() {
+            this.showCards = !this.showCards;
+        },
+        suitColor(suit) {
             const suit_color = GameHelpers.suitColor(suit);
             return `card-${suit_color}`;
         },
-        suitSymbol: function(suit) {
+        suitSymbol(suit) {
             return GameHelpers.suitIcon(suit);
         },
-        valueIcon: function(card_value) {
+        valueIcon(card_value) {
             return GameHelpers.cardValueIcon(card_value);
         },
-        cleanRule(rule) {
+        cleanRule() {
+            this.rule = '';
+        },
+        cleanRuleStr(rule) {
             return rule.trim().replace(/  +/g, ' ').replaceAll('\n ', '\n');
         },
         setPredefinedRule() {
             const { selectedPredefinedRule, ruleExamples } = this;
-            this.rule = this.cleanRule(ruleExamples[selectedPredefinedRule].rule);
+            this.rule = this.cleanRuleStr(ruleExamples[selectedPredefinedRule].rule);
         },
         async newRule() {
-            this.rule = this.cleanRule(this.rule);
+            this.rule = this.cleanRuleStr(this.rule);
             this.cleanCustomCardDeck();
             const { rule, gameCustoms } = this;
             this.$nuxt.$loading.start();
@@ -108,6 +123,10 @@ export default {
             gameCustoms.players[topPlayer].show_cards = "yes";
             gameCustoms.display_cards_top_team = false;
         },
+        cardsToRule() {
+            const { cards } = this.gameCustoms;
+            this.rule = Rule.cardsToRule(cards);
+        },
         cleanCustomCardDeck() {
             const { gameCustoms } = this;
             gameCustoms.cards = [];
@@ -122,6 +141,15 @@ export default {
             for (const p in gameCustoms.players) gameCustoms.players[p].show_cards = "no";
             gameCustoms.players[topPlayer].show_cards = "yes";
             gameCustoms.display_cards_top_team = false;
+        },
+        downloadCardDeck() {
+            const { cards } = this.gameCustoms;
+            const data = JSON.stringify(cards, null, 4);
+            const blob = new Blob([data], {type: 'application/json'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "cards.json";
+            link.click();
         },
         loadCustomCardDeck(e) {
             this.cleanCustomCardDeck();

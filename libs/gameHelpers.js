@@ -422,7 +422,7 @@ export default new class {
                 cardDeck.push(c);
             }
         }
-        return cardDeck;
+        return cardDeck.sort((a,b) => a.suit.localeCompare(b.suit) || (b.value - a.value));
     }
 
     loopNextPlayer(player_id) {

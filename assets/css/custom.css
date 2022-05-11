@@ -54,10 +54,13 @@ button, input, optgroup, select, textarea {
   display: none !important;
 }
 
-.bg-light-white {
+.navbar-common {
   font-family: 'Staatliches', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
+}
+
+.bg-light-white {
   background-color: #ffffff !important;
   border: 0;
 }

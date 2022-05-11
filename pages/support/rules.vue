@@ -3,6 +3,7 @@
         <div class="block has-text-centered has-text-weight-bold">
             <p class="title is-2">Support</p>
             <p class="subtitle is-3">Hand Editor Rules</p>
+            <hr class="hr">
         </div>
         <div class="block">
             <h3>Random hands by custom rules</h3>
@@ -18,7 +19,7 @@
             &lt;player&gt;.&lt;suit&gt;(&lt;parameter one&gt;, &lt;parameter two&gt;, etc.)
             </blockquote>
             <p>Every formula can handle 3 categories of parameters to define:</p>
-            <ol>
+            <ol class="is-italic has-text-weight-bold">
                 <li>Suit length</li>
                 <li>Suit cards to include</li>
                 <li>Suit cards to exclude</li>
@@ -95,7 +96,7 @@
 <script>
 
 export default {
-    layout: 'play',
+    layout: 'support',
     data: function() {
         return {
             sections: [
