@@ -1,5 +1,3 @@
-'use strict';
-
 import GameHelpers from '@/libs/gameHelpers';
 import LogicReasoning from '@/libs/AI/logicReasoning';
 

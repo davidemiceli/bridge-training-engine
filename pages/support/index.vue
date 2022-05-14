@@ -14,7 +14,7 @@
 
 <script>
 export default {
-    layout: 'play',
+    layout: 'support',
     data: function() {
         return {
             sections: [

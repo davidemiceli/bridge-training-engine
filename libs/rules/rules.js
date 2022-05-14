@@ -1,5 +1,3 @@
-'use strict';
-
 import jsep from 'jsep';
 import { sum } from 'lodash';
 import GameHelpers from '@/libs/gameHelpers';
@@ -10,6 +8,7 @@ import RuleError from '@/libs/rules/errors';
 export default new class {
 
     constructor() {
+        this.cardSymbols = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
         // Common configurations
         const Exps = ['-', '+', '==', '='];
         for (const exp of Exps) {
@@ -20,8 +19,23 @@ export default new class {
         jsep.addUnaryOp('-');
     }
 
+    cardsToRule(cards) {
+        const { cardSymbols } = this;
+        const suits = GameHelpers.suits();
+        const players = GameHelpers.players();
+        const ruleData = players.map(p => {
+            const playerRule = suits.map(s => {
+                const strCards = cards.filter(c => c.player_id == p && c.suit == s).sort((a,b) => b.value - a.value).map(c => cardSymbols[c.value-2]).join('');
+                return `.${s}(+${strCards})`
+            });
+            const pRuleStr = playerRule.join('');
+            return p + pRuleStr;
+        });
+        return ruleData.join('\n');
+    }
+
     ruleCards(cards) {
-        const cardSymbols = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+        const { cardSymbols } = this;
         const choosenCardValues = cardSymbols.filter(cs => new RegExp(cs).test(cards)).map(cs => cardSymbols.indexOf(cs)+2).sort((a,b) => b - a);
         return choosenCardValues.map(Number);
     }

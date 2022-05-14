@@ -5,6 +5,7 @@
 </p>
 <h2 align="center">Bridge Training Engine</h2>
 <p align="center"><em>A Free and Open Source platform for Bridge training.</em></p>
+<p align="center"><a href="https://davidemiceli.github.io/bridge-training-engine"><em>https://davidemiceli.github.io/bridge-training-engine</em></a></p>
 
 ## Getting Started
 
@@ -45,3 +46,22 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
+
+### Testing
+
+To test core application functions, there are unit tests.
+
+```bash
+# run unit tests
+$ npm run test
+```
+
+### Try application live
+
+The application is available at [https://davidemiceli.github.io/bridge-training-engine](https://davidemiceli.github.io/bridge-training-engine).
+
+### License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2022-present, Davide Miceli

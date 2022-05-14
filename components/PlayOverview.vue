@@ -22,11 +22,11 @@
             </div>
             <div class="level-item has-text-centered" v-if="contract">
                 <div>
-                    <p class="heading has-text-weight-bold">NS / EW Trick Target</p>
+                    <p class="heading has-text-weight-bold">NS / EW Tricks</p>
                     <p class="is-size-3">
-                        <span>{{targetTricks['north-south']}}</span>
+                        <span>{{teamTricks['north-south']}}</span>
                         <span class="has-text-weight-light">-</span>
-                        <span>{{targetTricks['east-west']}}</span>
+                        <span>{{teamTricks['east-west']}}</span>
                     </p>
                 </div>
             </div>
@@ -38,11 +38,11 @@
             </div>
             <div class="level-item has-text-centered" v-if="contract">
                 <div>
-                    <p class="heading has-text-weight-bold">NS / EW Tricks</p>
+                    <p class="heading has-text-weight-bold">NS / EW Trick Target</p>
                     <p class="is-size-3">
-                        <span>{{teamTricks['north-south']}}</span>
+                        <span>{{targetTricks['north-south']}}</span>
                         <span class="has-text-weight-light">-</span>
-                        <span>{{teamTricks['east-west']}}</span>
+                        <span>{{targetTricks['east-west']}}</span>
                     </p>
                 </div>
             </div>
@@ -83,6 +83,13 @@ export default {
         },
         deltaTricks(value) {
             return value < 0 ? `-${Math.abs(value)}` : `+${value}`;
+        },
+        percNormalization(tricks, target) {
+            switch(true) {
+                case (target + tricks) == 0: return 1;
+                case (target == 0 && tricks > 0): return tricks / 1;
+                default: return tricks / target;
+            }
         }
     },
     computed: {
@@ -100,19 +107,20 @@ export default {
             const { contract } = this;
             const contract_team = GameHelpers.getPlayerTeam(contract.player_id);
             const attack_team = GameHelpers.getOpponentTeam(contract.player_id);
-            const target_tricks = {};
-            target_tricks[contract_team] = 6 + contract.value;
-            target_tricks[attack_team] = 7 - contract.value;
-            return target_tricks;
+            const targetTricks = {};
+            targetTricks[contract_team] = 6 + contract.value;
+            targetTricks[attack_team] = 7 - contract.value;
+            return targetTricks;
         },
         targetTricksPerc() {
-            const tricks = this.teamTricks;
-            const target_tricks = this.targetTricks;
-            const target_tricks_perc = {};
-            for (const team in target_tricks) {
-                target_tricks_perc[team] = (Math.abs(tricks[team] / target_tricks[team]) * 100).toFixed(0);
+            const { teamTricks, targetTricks } = this;
+            const targetTricksPerc = {};
+            for (const team in targetTricks) {
+                const [tricks, target] = [teamTricks[team], targetTricks[team]];
+                const perc = this.percNormalization(tricks, target);
+                targetTricksPerc[team] = (Math.abs(perc) * 100).toFixed(0);
             }
-            return target_tricks_perc;
+            return targetTricksPerc;
         }
     }
 }

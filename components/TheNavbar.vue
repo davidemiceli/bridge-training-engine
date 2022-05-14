@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar navbar-common" role="navigation" aria-label="main navigation">
         <div class="container">
 
             <div class="navbar-brand">
@@ -10,19 +10,17 @@
 
             <div class="navbar-end">
 
-                <!-- Donate button -->
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" class="button is-small light-shadow is-info has-text-weight-bold is-uppercase landing-font">
-                            <span class="material-icons mr-1">paid</span>Donate
-                        </a>
-                    </div>
-                </div>
+                <!-- App Version -->
+                <div class="navbar-item landing-font is-size-7 has-text-weight-bold is-lowercase">v{{version}}</div>
+                <!-- Donate link -->
+                <a class="navbar-item donate-link" href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" target="_blank">
+                    <span class="material-icons mr-1">paid</span>Donate
+                </a>
 
                 <!-- Game Menu -->
                 <div class="navbar-item has-dropdown is-hoverable" v-if="withMenu">
                     <a class="navbar-link">
-                        <span class="material-icons mr-2">sports_esports</span>Game
+                        <span class="material-icons mr-1">sports_esports</span>Game
                     </a>
                     <div class="navbar-dropdown">
                         <NuxtLink class="navbar-item" to="/game/new"><span class="material-icons mr-1">add_circle_outline</span>New</NuxtLink>
@@ -50,7 +48,9 @@ export default {
         withMenu: Boolean
     },
     data() {
-        return {}
+        return {
+            version: this.$config.appVersion
+        }
     }
 }
 </script>

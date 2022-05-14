@@ -1,5 +1,3 @@
-'use strict';
-
 import { sum, sampleSize, random } from 'lodash';
 import GameHelpers from '@/libs/gameHelpers';
 
@@ -111,7 +109,7 @@ export default new class {
         for (let i=0; i<iterations; i++) {
             const hand = this.executeNorms(norms);
             if (hand != null) return hand;
-            await GameHelpers.timeout(0);
+            await GameHelpers.delay(0);
         }
         throw Error('the rule does not produced consistent hands in a finite time, try again if you think the rule can produce valid results.');
     }

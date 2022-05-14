@@ -1,5 +1,3 @@
-'use strict';
-
 // Constants
 const player_nexts = {north: 'east', east: 'south', south: 'west', west: 'north'};
 const player_partners = {south: 'north', west: 'east', north: 'south', east: 'west'};
@@ -28,7 +26,7 @@ export default new class {
 
     constructor() { }
 
-    timeout(ms) {
+    delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
@@ -69,10 +67,6 @@ export default new class {
         let i = 0;
         while (i < n) chunks.push(arr.slice(i, i += len));
         return chunks;
-    }
-
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     players() {
@@ -219,14 +213,22 @@ export default new class {
         return this.shuffleArray(Object.keys(player_partners))[0];
     }
 
-    getRandomOpponentId(player_id) {
+    getOpponentIds(player_id) {
         const partner_id = this.getPartnerId(player_id);
-        const opponents = Object.keys(player_partners).filter(p_id => p_id != player_id && p_id != partner_id);
-        return this.shuffleArray(opponents)[0];
+        return Object.keys(player_partners).filter(p_id => p_id != player_id && p_id != partner_id);
+    }
+
+    getRandomOpponentId(player_id) {
+        return this.shuffleArray(this.getOpponentIds(player_id))[0];
     }
 
     getPartnerId(player_id) {
         return player_partners[player_id];
+    }
+
+    getPartner(player_id, players) {
+        const partnerId = this.getPartnerId(player_id);
+        return players.filter(p => p.id == partnerId)[0];
     }
 
     getPlayerTeam(player_id) {
@@ -414,7 +416,7 @@ export default new class {
                 cardDeck.push(c);
             }
         }
-        return cardDeck;
+        return cardDeck.sort((a,b) => a.suit.localeCompare(b.suit) || (b.value - a.value));
     }
 
     loopNextPlayer(player_id) {

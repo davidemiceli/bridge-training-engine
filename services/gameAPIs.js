@@ -1,5 +1,3 @@
-'use strict';
-
 import GameEngine from '@/libs/gameEngine';
 
 

@@ -1,3 +1,5 @@
+import pkg from './package.json'
+
 export default {
   // Build only client-side (https://go.nuxtjs.dev/config-ssr)
   ssr: false,
@@ -10,6 +12,11 @@ export default {
 
   static: {
     prefix: false
+  },
+
+  // https://nuxtjs.org/guide/runtime-config
+  publicRuntimeConfig: {
+    appVersion: pkg.version,
   },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
