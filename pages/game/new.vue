@@ -96,7 +96,7 @@ export default {
             this.rule = '';
         },
         cleanRuleStr(rule) {
-            return rule.trim().replace(/  +/g, ' ').replaceAll('\n ', '\n');
+            return rule.trim().replace(/ /g,'').replace(/\n /g, '\n ');
         },
         setPredefinedRule() {
             const { selectedPredefinedRule, ruleExamples } = this;
