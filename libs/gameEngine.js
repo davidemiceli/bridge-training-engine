@@ -124,12 +124,17 @@ export default new class {
     }
 
     autoContract(s) {
+        s.resetBids();
         const { players } = s;
         const [ playerId, teamId, bidId ] = AutoContract.bestContract(players);
-        const loopPlayers = GameHelpers.loopPlayers(playerId);
-        for (const p of loopPlayers) {
-            const bid = GameHelpers.createBid(p, p == playerId ? bidId : 'pass');
-            s.addBid(bid);
+        while(true) {
+            const loopPlayers = GameHelpers.loopPlayers(s.current_player);
+            for (const p of loopPlayers) {
+                const bid = GameHelpers.createBid(p, p == playerId ? bidId : 'pass');
+                s.addBid(bid);
+                if (GameHelpers.biddingIsEnded(s.bids)) break;
+            }
+            if (GameHelpers.biddingIsEnded(s.bids)) break;
         }
         const contract = this.defineContract(s.bids);
         s.addContract(contract);

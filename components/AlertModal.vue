@@ -13,7 +13,7 @@
                 <div class="message-body is-size-5">
                     <div class="has-text-dark">{{msg}}</div>
                     <div class="has-text-right">
-                        <button class="button is-large is-warning" @click="okClicked">
+                        <button class="button is-large light-shadow is-warning" @click="okClicked">
                             <span class="material-icons">done_outline</span>
                         </button>
                     </div>

@@ -64,6 +64,10 @@ export default class {
         this.contract = contract;
     }
 
+    resetBids() {
+        this.bids = [];
+    }
+
     updateTricks(tricks) {
         this.tricks = tricks.map(t => [...t]);
     }

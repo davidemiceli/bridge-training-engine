@@ -8,11 +8,11 @@ class GameAPIs {
     }
 
     _storeGameState(data) {
-        sessionStorage.setItem(this.storeKey, JSON.stringify(data));
+        localStorage.setItem(this.storeKey, JSON.stringify(data));
     }
 
     _getGameState() {
-        const data = sessionStorage.getItem(this.storeKey);
+        const data = localStorage.getItem(this.storeKey);
         const s = JSON.parse(data);
         return GameEngine.load(s);
     }

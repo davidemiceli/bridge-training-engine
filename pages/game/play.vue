@@ -84,7 +84,7 @@
         </div>
 
         <div class="container" v-if='contractWasDefined && gameState.settings && uiPlayOpts.gameAnalysis'>
-            <GameAnalysis class="box" :players='sideBySidePlayersData()' :contract=gameState.contract :tricks=gameState.tricks />
+            <GameAnalysis :players='sideBySidePlayersData()' :contract=gameState.contract :tricks=gameState.tricks />
         </div>
 
     </div>

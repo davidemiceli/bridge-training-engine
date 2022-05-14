@@ -7,8 +7,11 @@
         </div>
         <div class="block">
             <h3>Random hands by custom rules</h3>
-            <p>When creating a new game is possible to create random hands using custom rules.</p>
-            <p>These rules are defined through special formulas.</p>
+            <p>
+                When creating a new game is possible to create random hands using user-defined rules.
+                This is very useful to test your play on a certain type of hands, re-play hands or some variations, pratice with bidding, experiment new conventions.
+            </p>
+            <p>These rules are defined through special formulas to place constraints on the random generation of hands.</p>
             <p><em>An example of rule:</em></p>
             <blockquote class="mono-font has-text-weight-bold is-size-6">
             north.clubs(4).diamonds(2,5).hearts(3,+A,-J10)<br />
