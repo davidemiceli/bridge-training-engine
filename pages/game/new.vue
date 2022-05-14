@@ -51,7 +51,7 @@
                 The top team is <span class="is-capitalized">{{selectedScoreRange.team}}</span> with {{selectedScoreRange.points}} total HCP.
             </div>
         </div>
-        <hr class="hr" v-if="!showCards">
+        <hr class="hr mb-6" v-if="!showCards">
         <div class="buttons is-centered">
             <button class="button light-shadow is-success is-medium has-text-weight-bold is-capitalized" @click="createNewGame()">Play</button>
             <button class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" @click="loadSavedGameTrigger()">Load Game</button>
@@ -168,7 +168,6 @@ export default {
         },
         loadSavedGame(e) {
             this.cleanCustomCardDeck();
-            console.log(e);
             const files = e.target.files || e.dataTransfer.files;
             if (!files.length) return;
             const reader = new FileReader();

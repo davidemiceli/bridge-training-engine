@@ -58,7 +58,7 @@ $ npm run test
 
 ### Try application live
 
-The application is available at https://davidemiceli.github.io/bridge-training-engine.
+The application is available at [https://davidemiceli.github.io/bridge-training-engine](https://davidemiceli.github.io/bridge-training-engine).
 
 ### License
 

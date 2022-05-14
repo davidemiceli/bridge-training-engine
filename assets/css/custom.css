@@ -78,6 +78,10 @@ button, input, optgroup, select, textarea {
   background-color: hsl(0, 0%, 100%) !important;
 }
 
+.donate-link {
+  color: #377cb5;
+}
+
 .donate-button {
   border-color:hsl(42, 100%, 61%) !important;
   background-color: hsl(42, 100%, 61%) !important;

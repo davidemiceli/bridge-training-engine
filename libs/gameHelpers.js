@@ -1,5 +1,3 @@
-'use strict';
-
 // Constants
 const player_nexts = {north: 'east', east: 'south', south: 'west', west: 'north'};
 const player_partners = {south: 'north', west: 'east', north: 'south', east: 'west'};
@@ -28,7 +26,7 @@ export default new class {
 
     constructor() { }
 
-    timeout(ms) {
+    delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
@@ -69,10 +67,6 @@ export default new class {
         let i = 0;
         while (i < n) chunks.push(arr.slice(i, i += len));
         return chunks;
-    }
-
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     players() {

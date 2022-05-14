@@ -13,7 +13,7 @@
                 <!-- App Version -->
                 <div class="navbar-item landing-font is-size-7 has-text-weight-bold is-lowercase">v{{version}}</div>
                 <!-- Donate link -->
-                <a class="navbar-item" href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" target="_blank">
+                <a class="navbar-item donate-link" href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" target="_blank">
                     <span class="material-icons mr-1">paid</span>Donate
                 </a>
 

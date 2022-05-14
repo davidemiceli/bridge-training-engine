@@ -1,5 +1,3 @@
-'use strict';
-
 import jsep from 'jsep';
 import { sum } from 'lodash';
 import GameHelpers from '@/libs/gameHelpers';

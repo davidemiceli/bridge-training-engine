@@ -1,5 +1,3 @@
-'use strict';
-
 import GameHelpers from '@/libs/gameHelpers';
 import Game from '@/libs/classes/game';
 import PlayEngine from '@/libs/playEngine';
@@ -127,9 +125,7 @@ export default new class {
 
     autoContract(s) {
         const { players } = s;
-        const [ playerId, teamId, points, trump ] = AutoContract.bestContract(players);
-        const bidValue = GameHelpers.tricksByTeamPoints(points);
-        const bidId = GameHelpers.createBidId(bidValue, trump);
+        const [ playerId, teamId, bidId ] = AutoContract.bestContract(players);
         const loopPlayers = GameHelpers.loopPlayers(playerId);
         for (const p of loopPlayers) {
             const bid = GameHelpers.createBid(p, p == playerId ? bidId : 'pass');
