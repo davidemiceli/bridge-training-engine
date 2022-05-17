@@ -30,7 +30,7 @@
         </div>
 
         <hr class="hr">
-        <p class="title has-text-weight-bold has-text-centered is-uppercase is-5 mb-3"><span class="material-icons has-text-info mr-1">recommend</span>Support</p>
+        <p class="title has-text-weight-bold has-text-centered is-uppercase is-5 mb-3"><span class="material-icons has-text-info mr-1">favorite</span>Support</p>
         <p class="has-text-centered">
             <a 
                 href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=20&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine"

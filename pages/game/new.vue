@@ -26,7 +26,7 @@
         <div class="buttons is-right">
             <button class="button light-shadow is-success has-text-weight-bold is-capitalized" @click="newRule()">Apply rule</button>
             <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanRule()">Clean rule</button>
-            <button class="button light-shadow is-light has-text-weight-bold" @click="goToSupport('rules')">
+            <button class="button light-shadow is-light has-text-weight-bold" @click="goToHelp('rules')">
                 <span class="icon is-small material-icons-outlined mr-1">info</span> Learn More on Rules
             </button>
         </div>
@@ -200,8 +200,8 @@ export default {
             this.$router.push({path: '/game/play'});
             return;
         },
-        goToSupport(supportPage) {
-            this.$router.push({path: '/support/'+supportPage});
+        goToHelp(helpPage) {
+            this.$router.push({path: '/help/'+helpPage});
         }
     },
     computed: {

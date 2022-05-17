@@ -7,7 +7,7 @@
         </div>
         <hr class="hr">
         <div class="buttons is-centered" v-for="(v, i) in sections" :key=i>
-            <NuxtLink class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" :to="'/support/' + v.url">{{v.name}}</NuxtLink>
+            <NuxtLink class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" :to="'/help/' + v.url">{{v.name}}</NuxtLink>
         </div>
     </div>
 </template>
