@@ -22,12 +22,16 @@ html, body {
   font-family: "Fira Code", monospace;
 }
 
+.code-text {
+  font-weight: 500 !important;
+}
+
 .landing-subtitle {
   line-height: 1.8;
 }
 
 .content-font {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
 }
 
 button, input, optgroup, select, textarea {

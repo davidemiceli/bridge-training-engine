@@ -20,13 +20,13 @@
         </div>
         <div class="field">
             <div class="control">
-                <textarea class="textarea has-text-weight-bold mono-font" placeholder="i.e.: north.spades(4).clubs(3,5,+KJ,-AQ) east.diamonds(2)" v-model='rule' spellcheck="false"></textarea>
+                <textarea class="textarea has-text-weight-bold mono-font code-text" placeholder="i.e.: north.spades(4).clubs(3,5,+KJ,-AQ) east.diamonds(2)" v-model='rule' spellcheck="false"></textarea>
             </div>
         </div>
         <div class="buttons is-right">
             <button class="button light-shadow is-success has-text-weight-bold is-capitalized" @click="newRule()">Apply rule</button>
             <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanRule()">Clean rule</button>
-            <button class="button light-shadow is-light has-text-weight-bold" @click="goToSupport('rules')">
+            <button class="button light-shadow is-light has-text-weight-bold" @click="goToHelp('rules')">
                 <span class="icon is-small material-icons-outlined mr-1">info</span> Learn More on Rules
             </button>
         </div>
@@ -63,6 +63,7 @@
 import GameHelpers from '@/libs/gameHelpers';
 import Rule from '@/libs/rules/rules';
 import RuleExamples from '@/libs/rules/examples';
+import FileHandler from '@/libs/fileHandler';
 
 
 export default {
@@ -143,37 +144,37 @@ export default {
             gameCustoms.display_cards_top_team = false;
         },
         downloadCardDeck() {
-            const { cards } = this.gameCustoms;
-            const data = JSON.stringify(cards, null, 4);
-            const blob = new Blob([data], {type: 'application/json'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = "cards.json";
-            link.click();
+            const data = JSON.stringify(this.gameCustoms.cards, null, 4);
+            FileHandler.downloadFile(data, 'cards.json');
         },
         loadCustomCardDeck(e) {
-            this.cleanCustomCardDeck();
-            const { gameCustoms } = this;
-            const files = e.target.files || e.dataTransfer.files;
-            if (!files.length) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                const uploadedCardDeck = JSON.parse(e.target.result);
-                gameCustoms.cards = uploadedCardDeck;
-            };
-            reader.readAsText(files[0]);
+            const self = this;
+            FileHandler.loadFile(e, async data => {
+                const cards = JSON.parse(data);
+                try {
+                    cards.forEach(c => {
+                        const keys = Object.keys(c);
+                        const existingKeys = ['card_id', 'suit', 'value', 'player_id'].every(k => keys.includes(k));
+                        if (!existingKeys) throw Error('Invalid card file.');
+                    });
+                } catch(err) {
+                    console.log(err);
+                    GameHelpers.showError('Invalid card file', self.$refs.alertModal);
+                    return;
+                }
+                this.cleanCustomCardDeck();
+                this.gameCustoms.cards = cards;
+                return;
+            });
         },
         loadCustomCardsTrigger() {
             this.$refs.fileCardsInput.click();
         },
         loadSavedGame(e) {
-            this.cleanCustomCardDeck();
-            const files = e.target.files || e.dataTransfer.files;
-            if (!files.length) return;
-            const reader = new FileReader();
-            reader.onload = async e => {
+            FileHandler.loadFile(e, async data => {
                 try {
-                    const uploadedGame = JSON.parse(e.target.result);
+                    const uploadedGame = JSON.parse(data);
+                    if (!(uploadedGame && uploadedGame.version)) throw Error('Invalid game file.');
                     await this.$store.dispatch('game/loadGame', uploadedGame);
                 } catch(err) {
                     console.log(err);
@@ -182,8 +183,7 @@ export default {
                 }
                 this.$router.push({path: '/game/play'});
                 return;
-            };
-            reader.readAsText(files[0]);
+            });
         },
         loadSavedGameTrigger() {
             this.$refs.fileGameInput.click();
@@ -200,8 +200,8 @@ export default {
             this.$router.push({path: '/game/play'});
             return;
         },
-        goToSupport(supportPage) {
-            this.$router.push({path: '/support/'+supportPage});
+        goToHelp(helpPage) {
+            this.$router.push({path: '/help/'+helpPage});
         }
     },
     computed: {

@@ -6,6 +6,7 @@
 <h2 align="center">Bridge Training Engine</h2>
 <p align="center"><em>A Free and Open Source platform for Bridge training.</em></p>
 <p align="center"><a href="https://davidemiceli.github.io/bridge-training-engine"><em>https://davidemiceli.github.io/bridge-training-engine</em></a></p>
+<p align="center"><a href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=20&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine" target="_blank"><img src="https://img.shields.io/badge/paypal-donate-blue.svg"></a></p>
 
 ## Getting Started
 
@@ -56,11 +57,15 @@ To test core application functions, there are unit tests.
 $ npm run test
 ```
 
-### Try application live
+## Contribution
+
+Any contribution is welcome. If you have any suggestions to improve the project, report any error or bug, create an issue.
+
+## Try application live
 
 The application is available at [https://davidemiceli.github.io/bridge-training-engine](https://davidemiceli.github.io/bridge-training-engine).
 
-### License
+## License
 
 [MIT](https://opensource.org/licenses/MIT)
 

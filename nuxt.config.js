@@ -25,7 +25,9 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'A Free and Open Source platform for Bridge training.' }
+      { hid: 'author', name: 'author', content: 'Davide Miceli' },
+      { hid: 'description', name: 'description', content: 'A Free and Open Source platform for Bridge Training.' },
+      { hid: 'keywords', name: 'keywords', content: 'bridge, free, online bridge, play bridge, play cards, rubber bridge, acbl, duplicate bridge' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' },
