@@ -36,7 +36,9 @@ export default new class {
                 else if (KeyCards == 7) v = 6;
             }
         } else {
-            if (value > 4) {
+            if (value == 4) {
+                if (TrumpKeyCards == 4 && ACount == 4 && KCount == 4) v = 6;
+            } else if (value > 4) {
                 if (TrumpKeyCards == 3 && ACount == 4) v = 7;
                 else if (TrumpKeyCards == 2 && ACount == 4) v = 6;
                 else if (TrumpKeyCards == 3 && ACount == 3) v = 6; 

@@ -17,19 +17,15 @@
 <script>
 import { mapGetters } from 'vuex';
 import gameNotCreatedMiddleware from '@/libs/customMiddlewares/gameNotCreated';
+import FileHandler from '@/libs/fileHandler';
 
 
 export default {
     layout: 'play',
     methods: {
         downloadCardDeck() {
-            const { fullCardDeck } = this;
-            const data = JSON.stringify(fullCardDeck, null, 4);
-            const blob = new Blob([data], {type: 'application/json'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = "cards.json";
-            link.click();
+            const data = JSON.stringify(this.fullCardDeck, null, 4);
+            FileHandler.downloadFile(data, 'cards.json');
         }
     },
     computed: {

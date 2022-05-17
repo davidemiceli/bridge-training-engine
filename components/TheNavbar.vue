@@ -12,8 +12,10 @@
 
                 <!-- App Version -->
                 <div class="navbar-item landing-font is-size-7 has-text-weight-bold is-lowercase">v{{version}}</div>
+                <!-- Sponsor link -->
+                <!-- <NuxtLink class="navbar-item" to="/sponsor">Sponsor</NuxtLink> -->
                 <!-- Donate link -->
-                <a class="navbar-item donate-link" href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" target="_blank">
+                <a class="navbar-item donate-link" target="_blank" href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=20&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine">
                     <span class="material-icons mr-1">paid</span>Donate
                 </a>
 

@@ -4,7 +4,7 @@
             <div class="column is-5">
                 <div class="block">
                     <p class="title is-1 is-capitalized has-text-weight-bold">Bridge Training Engine</p>
-                    <p class="subtitle landing-subtitle mt-6">
+                    <p class="subtitle landing-subtitle has-text-weight-medium mt-6">
                         A playable Bridge Solver and Game Analyzer focused on Training and Play Experiments.
                         Free and Open Source.
                     </p>
@@ -20,19 +20,21 @@
         </div>
 
         <div v-for="(featureGroup, gi) in features" :key=gi>
-            <hr>
+            <hr class="hr" v-bind:class="[gi == 0 ? 'mt-0' : '']">
             <div class="columns is-multiline has-text-left">
                 <div class="column is-6" v-for="(f, fi) in featureGroup" :key=fi>
                     <p class="title has-text-centered has-text-weight-bold is-5">{{f.title}}</p>
-                    <p class="subtitle landing-subtitle is-6 mt-1">{{f.description}}</p>
+                    <p class="subtitle landing-subtitle has-text-weight-medium is-6 mt-1">{{f.description}}</p>
                 </div>
             </div>
         </div>
 
         <hr class="hr">
-        <p class="title has-text-weight-bold has-text-centered is-uppercase is-5"><span class="material-icons has-text-info mr-1">recommend</span>Support</p>
+        <p class="title has-text-weight-bold has-text-centered is-uppercase is-5 mb-3"><span class="material-icons has-text-info mr-1">recommend</span>Support</p>
         <p class="has-text-centered">
-            <a href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR" target="_blank" class="button is-large light-shadow donate-button has-text-weight-bold">
+            <a 
+                href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=20&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine"
+                target="_blank" class="button is-large light-shadow is-light has-text-weight-bold">
                 <img src="PayPalDonate.svg" style="height: 34px;" />
             </a>
         </p>
