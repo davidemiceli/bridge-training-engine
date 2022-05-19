@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <h1 class="title has-text-weight-bold has-text-centered mb-6">Cards</h1>
 
         <h1 class="subtitle has-text-weight-bold has-text-centered">Starting card deck</h1>

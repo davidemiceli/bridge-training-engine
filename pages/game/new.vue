@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <AlertModal ref="alertModal" />
         <p class="title is-2 is-capitalized has-text-weight-bold has-text-centered">New Game</p>
         <p class="title is-6 mb-3">Random hands by custom rules</p>

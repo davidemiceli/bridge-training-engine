@@ -21,7 +21,7 @@
             </section>
 
             <footer class="modal-card-foot">
-                <button class="button is-medium" @click="cancelClicked">Cancel</button>
+                <button class="button is-medium is-light has-text-weight-bold light-shadow is-capitalized" @click="cancelClicked">Cancel</button>
             </footer>
 
         </div>
