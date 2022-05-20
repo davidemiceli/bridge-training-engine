@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div class="container">
         <p class="title has-text-weight-bold has-text-centered">Bids</p>
         <!-- Bids table -->
         <div class="table-container">

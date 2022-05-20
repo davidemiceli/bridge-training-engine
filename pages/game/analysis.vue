@@ -1,14 +1,12 @@
 <template>
 
-    <nav class="container panel">
-
-        <div class="panel-block is-block">
+    <div>
+        <div class="container is-block">
             <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=contract :tricks=tricks />
+            <hr class="hr-light">
         </div>
-        <div class="panel-block is-block" v-if="tricks.length > 0">
-            <GameAnalysis :players='sideBySidePlayersData()' :contract=contract :tricks=tricks />
-        </div>
-    </nav>
+        <GameAnalysis class="container is-block" :players='sideBySidePlayersData()' :contract=contract :tricks=tricks v-if="tricks.length > 0" />
+    </div>
 
 </template>
 

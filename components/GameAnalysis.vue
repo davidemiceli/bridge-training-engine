@@ -23,6 +23,7 @@
                     <tr>
                         <th>Trick</th>
                         <th>By</th>
+                        <th>Tricks</th>
                         <th>Winning</th>
                         <th>Type</th>
                         <th>Combinations</th>
@@ -37,6 +38,7 @@
                             <span class="is-uppercase mr-1">{{teamAbbr(t.player_id)}}</span>
                             <span class="is-capitalized">{{teamType(t.player_id)}}</span>
                         </td>
+                        <td class="is-vcentered has-text-weight-bold" v-bind:class="[t.player_id]">{{countTricks(t.team_id, t_index+1)}}</td>
                         <td>
                             <span class="is-capitalized has-text-weight-bold mr-1" v-bind:class="[t.player_id]">{{t.player_id[0]}}</span>
                             <SingleCard :card=t :cardSize='6' tagType='span' />
@@ -90,12 +92,12 @@ export default {
         updateTrickIndex(i) {
             this.trickIndex = i;
         },
-        playersData(trick_index) {
-            const t_index = trick_index || 0;
-            const played_cards = this.tricks
-                .filter((_, i) => i <= t_index)
-                .reduce((acc, trick_cards) => {
-                    for (const c of trick_cards) acc[c.card_id] = true;
+        playersData(trickIndex) {
+            const tIndex = trickIndex || 0;
+            const playedCards = this.tricks
+                .filter((_, i) => i <= tIndex)
+                .reduce((acc, trickCards) => {
+                    for (const c of trickCards) acc[c.card_id] = true;
                     return acc;
                 }, {});
             return this.players.map(p => {
@@ -103,13 +105,16 @@ export default {
                     ...p,
                     show: true,
                     showdata: true,
-                    cards: p.card_deck.filter(c => !(c.card_id in played_cards))
+                    cards: p.card_deck.filter(c => !(c.card_id in playedCards))
                 }
             });
         },
         teamType(player_id) {
             const { contract } = this;
             return (GameHelpers.getPlayerTeam(contract.player_id) == GameHelpers.getPlayerTeam(player_id)) ? 'defence' : 'attack';
+        },
+        countTricks(teamId, trickIndex) {
+            return this.tricks.slice(0, trickIndex).reduce((a,t) => a + t.filter(c => c.team_id == teamId && c.winner).length, 0);
         },
         playType(t, t_index) {
             // http://www.scuolabridgemultimediale.it/esperti-varie/sbm_dizionario.html

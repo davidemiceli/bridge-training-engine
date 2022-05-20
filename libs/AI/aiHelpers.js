@@ -195,11 +195,11 @@ export default new class {
                 futureWinners = this.countFutureWinners(teamIds, suit, this.getCardsWithSuit(suit, cards));
                 while (cards.filter(c => c.suit == suit).length > 0) {
                     const maxCard = this.getSuitCard(cards, 'greater', suit);
-                    const maxCardPlayerPartner = String(GameHelpers.getPartnerId(maxCard.player_id));
+                    const maxCardPlayerPartner = GameHelpers.getPartnerId(maxCard.player_id);
                     const maxCardTeam = [maxCard.player_id, maxCardPlayerPartner];
                     winners += teamIds.includes(maxCard.player_id) ? 1 : 0;
                     cards = cards.filter(c => c.card_id != maxCard.card_id);
-                    const opponentMaxCard = this.getSuitCard(cards.filter(c => !(maxCardTeam.includes(c.player_id))), 'greater', suit);
+                    const opponentMaxCard = this.getSuitCard(cards.filter(c => !maxCardTeam.includes(c.player_id)), 'greater', suit);
                     const choosenCardsToPlay = players
                         .filter(p => p != maxCard.player_id)
                         .reduce(

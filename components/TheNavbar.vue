@@ -31,7 +31,7 @@
                         <hr class="navbar-divider">
                         <NuxtLink class="navbar-item" to="/game/cards"><span class="material-icons mr-1">style</span>Cards</NuxtLink>
                         <NuxtLink class="navbar-item" to="/game/bids"><span class="material-icons mr-1">gavel</span>Bids</NuxtLink>
-                        <NuxtLink class="navbar-item" to="/game/tricks"><span class="material-icons mr-1">front_hand</span>Tricks</NuxtLink>
+                        <NuxtLink class="navbar-item" to="/game/analysis"><span class="material-icons mr-1">analytics</span>Analysis</NuxtLink>
                         <hr class="navbar-divider">
                         <NuxtLink class="navbar-item" to="/help"><span class="material-icons mr-1">support</span>Help</NuxtLink>
                     </div>

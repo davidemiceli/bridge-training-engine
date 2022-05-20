@@ -6,13 +6,15 @@
         <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.donePerc @cancelClicked='taskPlayOpts.cancel = true' />
         <ScoreModal :score=gameState.score :contract=gameState.contract @onClickClose="scoreModalToggle" v-if="handEnded && scoreModalOpen" />
 
-        <nav class="container panel">
+        <div class="container">
 
-            <div class="panel-block is-block">
+            <div class="is-block">
                 <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=gameState.contract :tricks=gameState.tricks />
             </div>
 
-            <div class="panel-block is-block">
+            <hr class="hr-light mini-margin">
+
+            <div class="is-block">
                 
                 <div class="buttons is-centered">
                     <button class="button is-light is-success has-text-weight-bold" @click="autoContract" v-if='!contractWasDefined'><span class="icon is-small material-icons mr-1">gavel</span>Auto Contract</button>
@@ -22,9 +24,6 @@
                     <button class="button is-light has-text-weight-bold" @click="playUndoAll"><span class="icon is-small material-icons mr-1">restart_alt</span>Undo All</button>
                     <button class="button is-light has-text-weight-bold" @click="scoreModalToggle" v-if="handEnded"><span class="icon is-small material-icons has-text-warning-dark mr-1">emoji_events</span>Results</button>
                     <button class="button is-light is-info has-text-weight-bold" @click="saveGameCheckpoint"><span class="icon is-small material-icons mr-1">save</span>Save</button>
-                    <button class="button is-light is-warning has-text-weight-bold" @click="setUiPlayOpts('gameAnalysis', !uiPlayOpts.gameAnalysis)">
-                        <span class="icon is-small material-icons mr-1">{{uiPlayOpts.gameAnalysis ? 'dashboard' : 'analytics'}}</span>{{uiPlayOpts.gameAnalysis ? 'Playground' : 'Game Analysis'}}
-                    </button>
                     <div class="dropdown is-hoverable">
                         <div class="dropdown-trigger">
                             <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
@@ -59,12 +58,15 @@
 
             </div>
 
-            <div class="panel-block is-block" v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()'>
+            <div class="is-block" v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()'>
+                <hr class="hr-light mini-margin">
                 <BiddingBoxPlayer :playerId=turnOfPlayerId @onSelectBid=playBid />
             </div>
-        </nav>
 
-        <div class="columns is-multiline is-mobile" v-if='!uiPlayOpts.gameAnalysis'>
+            <hr class="hr-light mini-margin">
+        </div>
+
+        <div class="columns is-multiline is-mobile">
             <div class="column is-12 is-flex is-justify-content-center">
                 <PlayerCardHand :player="playersData('north')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
@@ -81,10 +83,6 @@
             <div class="column is-12 is-flex is-justify-content-center">
                 <PlayerCardHand :player="playersData('south')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
-        </div>
-
-        <div class="container" v-if='contractWasDefined && gameState.settings && uiPlayOpts.gameAnalysis'>
-            <GameAnalysis :players='sideBySidePlayersData()' :contract=gameState.contract :tricks=gameState.tricks />
         </div>
 
     </div>
@@ -106,8 +104,7 @@ export default {
             originalLoop: [],
             taskPlayOpts: {title: '', active: false, cancel: false, steps: 0, donePerc: 0},
             uiPlayOpts: {
-                shapeKind: 'cards',
-                gameAnalysis: false
+                shapeKind: 'cards'
             }
         }
     },

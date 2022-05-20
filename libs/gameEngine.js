@@ -207,10 +207,8 @@ export default new class {
     trick(trick_count, trump, playedHandCards) {
         // Decide the trick
         const suitTurn = playedHandCards[0].suit;
-        // FIXME: Check if all players does not hold cards of the same hand suit if play another suit
-        const cardsOfTrumpSuit = playedHandCards.filter(c => c.suit == trump);
-        const cardsOfTurnSuit = playedHandCards.filter(c => c.suit == suitTurn);
-        const winnerCard = (cardsOfTrumpSuit.length == 0 ? cardsOfTurnSuit : cardsOfTrumpSuit).sort((a, b) => a.value - b.value).slice(-1)[0];
+        // TODO: Check if all players does not hold cards of the same hand suit if play another suit
+        const winnerCard = GameHelpers.getTrickWinnerCard(playedHandCards, suitTurn, trump);
         // Trick cards
         return playedHandCards.map(c => Object.assign({
             id: trick_count+1,
