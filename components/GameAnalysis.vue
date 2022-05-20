@@ -23,7 +23,7 @@
                     <tr>
                         <th>Trick</th>
                         <th>By</th>
-                        <th>Team tricks</th>
+                        <th>Tricks</th>
                         <th>Winning</th>
                         <th>Type</th>
                         <th>Combinations</th>

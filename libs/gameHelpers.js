@@ -316,6 +316,13 @@ export default new class {
         else return 0;
     }
 
+    getTrickWinnerCard(playedHandCards, suit, trump) {
+        const cardsOfTrumpSuit = playedHandCards.filter(c => c.suit == trump);
+        const cardsOfTurnSuit = playedHandCards.filter(c => c.suit == suit);
+        const winnerCard = (cardsOfTrumpSuit.length == 0 ? cardsOfTurnSuit : cardsOfTrumpSuit).sort((a, b) => a.value - b.value).slice(-1)[0];
+        return winnerCard;
+    }
+
     getTrickWinner(trickCards) {
         // Get the player that won the trick
         return trickCards.filter(c => c.winner).map(c => c.player_id)[0];
