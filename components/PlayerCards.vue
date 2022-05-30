@@ -1,19 +1,19 @@
 <template>
-    <table class="table is-striped has-text-centered">
+    <table class="table-auto w-full border-collapse bg-white text-center text-xs md:text-base">
         <thead>
             <tr>
-                <th>Players</th>
-                <th class="card-suit" v-bind:class="[suitColor(suit)]" v-for="suit in suitValues" :key=suit>{{suitSymbol(suit)}}</th>
-                <th class="is-capitalized" v-if="showPoints">HCP</th>
+                <th class="border py-2 px-4">Players</th>
+                <th class="border py-2 px-4 font-textcards" v-bind:class="[suitColor(suit)]" v-for="suit in suitValues" :key=suit>{{suitSymbol(suit)}}</th>
+                <th class="border py-2 px-4 capitalize" v-if="showPoints">HCP</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in playersData" :key=p.id v-show="p.cards.length > 0">
-                <td class="is-size-6 has-text-weight-bold is-capitalized is-vcentered p-0">{{p.id}}</td>
-                <td v-for="suit in suitValues" :key=suit class="p-1 is-vcentered card-shape">
-                    <span class="is-size-3" v-bind:class="[suitColor(suit)]" v-for="c in getCards(suit, p.cards)" :key=c.card_id>{{cardUnicode(c.card_id)}}</span>
+            <tr v-for="p in playersData" :key=p.id v-show="p.cards.length > 0" class="odd:bg-white even:bg-slate-100">
+                <td class="border py-2 px-4 capitalize font-bold">{{p.id}}</td>
+                <td v-for="suit in suitValues" :key=suit class="border py-2 px-4 font-cards leading-cards text-base md:text-4xl text-center">
+                    <span v-bind:class="[suitColor(suit)]" v-for="c in getCards(suit, p.cards)" :key=c.card_id>{{cardUnicode(c.card_id)}}</span>
                 </td>
-                <td v-if="showPoints" class="p-0 is-size-6 is-italic is-uppercase is-vcentered">{{calculatePlayerPoints(p)}}</td>
+                <td v-if="showPoints" class="border py-2 px-4 italic uppercase">{{calculatePlayerPoints(p)}}</td>
             </tr>
         </tbody>
     </table>
@@ -35,23 +35,22 @@ export default {
         }
     },
     methods: {
-        getCards: function(suit, cards) {
+        getCards(suit, cards) {
             return GameHelpers.filterCardsBySuit(suit, cards);
         },
-        suitColor: function(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
+        suitColor(suit) {
+            return GameHelpers.suitColor(suit);
         },
-        suitSymbol: function(suit) {
+        suitSymbol(suit) {
             return GameHelpers.suitIcon(suit);
         },
-        valueIcon: function(card_value) {
+        valueIcon(card_value) {
             return GameHelpers.cardValueIcon(card_value);
         },
         cardUnicode(card_id) {
             return GameHelpers.cardUnicode(card_id);
         },
-        calculatePlayerPoints: function(p) {
+        calculatePlayerPoints(p) {
             const { onlyRemainingCards } = this;
             const cards = onlyRemainingCards ? p.cards : p.card_deck;
             return GameHelpers.calculatePlayerPoints(p.id, cards);

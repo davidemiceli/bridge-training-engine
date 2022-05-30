@@ -2,61 +2,61 @@
 
     <div>
 
-        <div class="columns is-multiline is-mobile">
-            <div class="column is-6 is-flex is-justify-content-center is-align-items-center" v-for="p in playersData(trickIndex)" :key=p.id>
+        <div class="grid grid-cols-1 gap-4 justify-center items-center place-content-center sm:gap-8 sm:grid-cols-2">
+            <div class="col-span-1 justify-self-center" v-for="p in playersData(trickIndex)" :key=p.id>
                 <PlayerCardHand :player=p :shapeKind="'cards'" :interactive='false' :inlineAlternate='false' />
             </div>
         </div>
 
-        <div class="columns is-multiline is-mobile" v-if='trickIndex != null'>
-            <div class="column is-3 has-text-centered pb-0" v-for="c in selectedTrickCards" :key=c.player_id>
-                <div class="is-uppercase has-text-weight-bold">{{c.player_id}}</div>
+        <div class="grid grid-cols-4 gap-4 justify-center items-center place-content-center mt-8 text-3xl sm:text-5xl" v-if='trickIndex != null'>
+            <div class="col-span-1 justify-self-center" v-for="c in selectedTrickCards" :key=c.player_id>
+                <div class="uppercase text-base font-bold text-xs sm:text-base">{{c.player_id}}</div>
             </div>
-            <div class="column is-3 has-text-centered pt-0" v-for="c in selectedTrickCards" :key=c.card_id>
-                <SingleCard :card=c :cardSize='1' :shapeKind="'cards'" />
+            <div class="col-span-1 justify-self-center" v-for="c in selectedTrickCards" :key=c.card_id>
+                <SingleCard :card=c :shapeKind="'cards'" />
             </div>
         </div>
 
-        <div class="table-container">
-            <table class="table is-striped is-narrow is-fullwidth has-text-centered">
-                <thead>
+        <div class="mt-8 border-b-2 border-gray-200 text-xs sm:text-base">
+            <table class="table-auto w-full border-collapse bg-white text-center">
+                <thead class="border-b-2 border-gray-200">
                     <tr>
-                        <th>Trick</th>
-                        <th>By</th>
-                        <th>Tricks</th>
-                        <th>Winning</th>
-                        <th>Type</th>
-                        <th>Combinations</th>
-                        <th>Loop</th>
-                        <th>Played cards</th>
+                        <th class="py-1 px-2">Trick</th>
+                        <th class="py-1 px-2">By</th>
+                        <th class="py-1 px-2 hidden lg:table-cell">Tricks</th>
+                        <th class="py-1 px-2">Winning</th>
+                        <th class="py-1 px-2">Type</th>
+                        <th class="py-1 px-2 hidden lg:table-cell">Combinations</th>
+                        <th class="py-1 px-2 hidden md:table-cell">Loop</th>
+                        <th class="py-1 px-2">Played cards</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(t, t_index) in tricksView" :key=t_index @click="updateTrickIndex(t_index)" class="is-clickable" v-bind:class="[t_index === trickIndex ? 'table-row-selected' : '']">
-                        <td class="is-vcentered has-text-weight-bold">{{t_index+1}}</td>
-                        <td class="is-vcentered has-text-weight-bold" v-bind:class="[t.player_id]">
-                            <span class="is-uppercase mr-1">{{teamAbbr(t.player_id)}}</span>
-                            <span class="is-capitalized">{{teamType(t.player_id)}}</span>
+                <tbody class="divide-y divide-gray-300">
+                    <tr v-for="(t, t_index) in tricksView" :key=t_index @click="updateTrickIndex(t_index)" class="cursor-pointer odd:bg-white even:bg-slate-100" v-bind:class="[t_index === trickIndex ? '!border-2 !border-gray-400 !shadow-inner' : '']">
+                        <td class="py-1 px-2 font-bold">{{t_index+1}}</td>
+                        <td class="py-1 px-2 font-bold" v-bind:class="[t.player_id]">
+                            <span class="uppercase mr-1">{{teamAbbr(t.player_id)}}</span>
+                            <span class="capitalize">{{teamType(t.player_id)}}</span>
                         </td>
-                        <td class="is-vcentered has-text-weight-bold" v-bind:class="[t.player_id]">{{countTricks(t.team_id, t_index+1)}}</td>
-                        <td>
-                            <span class="is-capitalized has-text-weight-bold mr-1" v-bind:class="[t.player_id]">{{t.player_id[0]}}</span>
-                            <SingleCard :card=t :cardSize='6' tagType='span' />
+                        <td class="py-1 px-2 hidden lg:table-cell font-bold" v-bind:class="[t.player_id]">{{countTricks(t.team_id, t_index+1)}}</td>
+                        <td class="py-1 px-2">
+                            <span class="capitalize font-bold mr-1" v-bind:class="[t.player_id]">{{t.player_id[0]}}</span>
+                            <SingleCard :card=t tagType='span' />
                         </td>
-                        <td class="is-vcentered is-uppercase is-size-7 has-text-weight-bold is-italic">{{playType(t, t_index)}}</td>
-                        <td>
-                            <SingleCard :card='t.all_cards[0]' :cardSize='6' tagType='span' class="mr-1" /><SingleCard :card='t.all_cards[2]' :cardSize='6' tagType='span' />
-                            <span class="has-text-weight-bold has-text-grey ml-2 mr-2">vs</span>
-                            <SingleCard :card='t.all_cards[1]' :cardSize='6' tagType='span' class="mr-1" /><SingleCard :card='t.all_cards[3]' :cardSize='6' tagType='span' />
+                        <td class="py-1 px-2 capitalize md:uppercase text-xs font-bold italic">{{playType(t, t_index)}}</td>
+                        <td class="py-1 px-2 hidden lg:table-cell">
+                            <SingleCard :card='t.all_cards[0]' tagType='span' class="mr-1" /><SingleCard :card='t.all_cards[2]' tagType='span' />
+                            <span class="font-bold text-gray-600 ml-2 mr-2">vs</span>
+                            <SingleCard :card='t.all_cards[1]' tagType='span' class="mr-1" /><SingleCard :card='t.all_cards[3]' tagType='span' />
                         </td>
-                        <td class="is-vcentered">
-                            <span v-for="c in t.all_cards" :key=c.card_id class="is-capitalized has-text-weight-bold" v-bind:class="[c.player_id]">
+                        <td class="py-1 px-2 hidden md:table-cell">
+                            <span v-for="c in t.all_cards" :key=c.card_id class="capitalize font-bold" v-bind:class="[c.player_id]">
                                 {{c.player_id[0]}}
                             </span>
                         </td>
-                        <td>
+                        <td class="py-1 px-2">
                             <span v-for="c in t.all_cards" :key=c.card_id>
-                                <SingleCard :card=c :cardSize='6' class="mr-2" tagType='span' />
+                                <SingleCard :card=c class="mr-2" tagType='span' />
                             </span>
                         </td>
                     </tr>

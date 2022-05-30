@@ -1,64 +1,48 @@
 <template>
-    <div>
-
-        <nav class="level">
-            <div class="level-item has-text-centered" v-if='attack'>
-                <div>
-                    <p class="heading has-text-weight-bold">Attack</p>
-                    <p class="is-size-3 card-shape" v-bind:class="[suitColor(attack.suit)]">
-                        {{cardUnicode(attack.card_id)}}
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered" v-if="contract">
-                <div>
-                    <p class="heading has-text-weight-bold">NS / EW Trick Target %</p>
-                    <p class="is-size-3">
-                        <span>{{targetTricksPerc['north-south']}}%</span>
-                        <span class="has-text-weight-light">-</span>
-                        <span>{{targetTricksPerc['east-west']}}%</span>
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered" v-if="contract">
-                <div>
-                    <p class="heading has-text-weight-bold">NS / EW Tricks</p>
-                    <p class="is-size-3">
-                        <span>{{teamTricks['north-south']}}</span>
-                        <span class="has-text-weight-light">-</span>
-                        <span>{{teamTricks['east-west']}}</span>
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading has-text-weight-bold">Time</p>
-                    <p class="has-text-weight-light is-size-3">{{gameTime}}</p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered" v-if="contract">
-                <div>
-                    <p class="heading has-text-weight-bold">NS / EW Trick Target</p>
-                    <p class="is-size-3">
-                        <span>{{targetTricks['north-south']}}</span>
-                        <span class="has-text-weight-light">-</span>
-                        <span>{{targetTricks['east-west']}}</span>
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered" v-if="contract">
-                <div>
-                    <p class="heading has-text-weight-bold">Contract {{contract.player_id}}</p>
-                    <p class="is-size-3">
-                        <strong>{{contract.value}}</strong>
-                        <strong class="card-suit is-uppercase" v-bind:class="[suitColor(contract.trump)]">{{suitSymbol(contract.trump)}}</strong>
-                        <small class="has-text-danger-dark has-text-weight-bold" v-if="contract.double">X</small>
-                        <small class="has-text-info-dark has-text-weight-bold" v-if="contract.redouble">XX</small>
-                    </p>
-                </div>
-            </div>
-        </nav>
-
+    <div class="grid grid-flow-col auto-cols-max gap-8 grid-flow-col-dense place-content-center mb-3 md:gap-12 lg:gap-20">
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700" v-if='attack'>
+            <p class="text-xs tracking-widest uppercase font-bold">Attack</p>
+            <p class="font-cards text-xl md:text-4xl align-middle" v-bind:class="[suitColor(attack.suit)]">
+                {{cardUnicode(attack.card_id)}}
+            </p>
+        </div>
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700 hidden lg:block" v-if="contract">
+            <p class="text-xs tracking-widest uppercase font-bold">NS / EW Trick Target %</p>
+            <p class="text-xl md:text-4xl">
+                <span>{{targetTricksPerc['north-south']}}%</span>
+                <span class="md:font-light">-</span>
+                <span>{{targetTricksPerc['east-west']}}%</span>
+            </p>
+        </div>
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700" v-if="contract">
+            <p class="text-xs tracking-widest uppercase font-bold">NS / EW Tricks</p>
+            <p class="text-xl md:text-4xl">
+                <span>{{teamTricks['north-south']}}</span>
+                <span class="md:font-light">-</span>
+                <span>{{teamTricks['east-west']}}</span>
+            </p>
+        </div>
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700">
+            <p class="text-xs tracking-widest uppercase font-bold">Time</p>
+            <p class="text-xl md:text-4xl">{{gameTime}}</p>
+        </div>
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700 hidden sm:block" v-if="contract">
+            <p class="text-xs tracking-widest uppercase font-bold">NS / EW Trick Target</p>
+            <p class="text-xl md:text-4xl">
+                <span>{{targetTricks['north-south']}}</span>
+                <span class="md:font-light">-</span>
+                <span>{{targetTricks['east-west']}}</span>
+            </p>
+        </div>
+        <div class="col-span-1 text-center md:space-y-2 text-gray-700" v-if="contract">
+            <p class="text-xs tracking-widest uppercase font-bold">Contract {{contract.player_id}}</p>
+            <p class="text-xl md:text-3xl">
+                <strong class="text-gray-800">{{contract.value}}</strong>
+                <strong class="font-textcards uppercase text-xl md:text-3xl" v-bind:class="[suitColor(contract.trump)]">{{suitSymbol(contract.trump)}}</strong>
+                <small class="text-red-600 font-bold" v-if="contract.double">X</small>
+                <small class="text-sky-600 font-bold" v-if="contract.redouble">XX</small>
+            </p>
+        </div>
     </div>
 </template>
 
@@ -74,8 +58,7 @@ export default {
     },
     methods: {
         suitColor(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
+            return GameHelpers.suitColor(suit);
         },
         suitSymbol: GameHelpers.suitIcon,
         cardUnicode(card_id) {

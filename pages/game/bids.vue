@@ -1,46 +1,44 @@
 <template>
 
-    <div class="container">
-        <p class="title has-text-weight-bold has-text-centered">Bids</p>
+    <div class="container mx-auto text-gray-800 text-center">
+        <h1 class="text-4xl font-bold mb-6">Bids</h1>
         <!-- Bids table -->
-        <div class="table-container">
-            <table class="table is-bordered is-striped is-fullwidth has-text-centered">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Bid</th>
-                        <th>Trump</th>
-                        <th>Player</th>
-                        <th>Double</th>
-                        <th>Redouble</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(b, index) in bidList" :key=index>
-                        <td>{{index + 1}}</td>
-                        <td>
-                            <SingleCard :card=b.name :cardSize='6' class="has-text-centered" v-if="isNormalBid(b.id)" />
-                            <strong v-if="b.id == 'pass'">PASS</strong>
-                            <strong class="has-text-danger-dark" v-if="b.id == 'double'">X</strong>
-                            <strong class="has-text-info-dark" v-if="b.id == 'redouble'">XX</strong>
-                        </td>
-                        <td>
-                            <strong class="card-suit is-size-6 is-uppercase" v-bind:class="[suitColor(b.trump)]" v-if="isNormalBid(b.id)">{{suitSymbol(b.trump)}}</strong>
-                            <span class="material-icons has-text-grey-lighter" v-if="b.id == 'pass'">remove</span>
-                        </td>
-                        <td class="has-text-weight-bold is-capitalized" v-bind:class="[b.player_id]">{{b.player_id}}</td>
-                        <td>
-                            <span class="material-icons" v-if="b.double">done</span>
-                            <span class="material-icons has-text-grey-lighter" v-if="!b.double">remove</span>
-                        </td>
-                        <td>
-                            <span class="material-icons" v-if="b.redouble">done_all</span>
-                            <span class="material-icons has-text-grey-lighter" v-if="!b.redouble">remove</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class="table-auto w-full border-collapse bg-white text-center">
+            <thead>
+                <tr>
+                    <th class="border py-2 px-4">#</th>
+                    <th class="border py-2 px-4">Bid</th>
+                    <th class="border py-2 px-4">Trump</th>
+                    <th class="border py-2 px-4">Player</th>
+                    <th class="border py-2 px-4">Double</th>
+                    <th class="border py-2 px-4">Redouble</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(b, index) in bidList" :key=index class="odd:bg-white even:bg-slate-100">
+                    <td class="border py-2 px-4">{{index + 1}}</td>
+                    <td class="border py-2 px-4">
+                        <SingleCard :card=b.name :cardSize='6' class="text-center" v-if="isNormalBid(b.id)" />
+                        <strong class="text-green-600" v-if="b.id == 'pass'">PASS</strong>
+                        <strong class="text-red-600" v-if="b.id == 'double'">X</strong>
+                        <strong class="text-sky-600" v-if="b.id == 'redouble'">XX</strong>
+                    </td>
+                    <td class="border py-2 px-4">
+                        <strong class="font-textcards uppercase" v-bind:class="[suitColor(b.trump)]" v-if="isNormalBid(b.id)">{{suitSymbol(b.trump)}}</strong>
+                        <span class="material-icons text-gray-300" v-if="b.id == 'pass'">remove</span>
+                    </td>
+                    <td class="border py-2 px-4 font-bold capitalize" v-bind:class="[b.player_id]">{{b.player_id}}</td>
+                    <td class="border py-2 px-4">
+                        <span class="material-icons" v-if="b.double">done</span>
+                        <span class="material-icons text-gray-300" v-if="!b.double">remove</span>
+                    </td>
+                    <td class="border py-2 px-4">
+                        <span class="material-icons" v-if="b.redouble">done_all</span>
+                        <span class="material-icons text-gray-300" v-if="!b.redouble">remove</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 </template>

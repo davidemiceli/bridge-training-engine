@@ -1,7 +1,7 @@
 <template>
-    <div class="container">
-        <TheNavbar class="is-fixed-top bg-light-white navbar-border" :withMenu='true' />
-        <Nuxt class="content-font m-t-70" />
+    <div class="flex flex-col h-screen">
+        <TheNavbar :withMenu='true' />
+        <Nuxt class="mb-auto mt-8 font-display" />
         <Footer />
     </div>
 </template>

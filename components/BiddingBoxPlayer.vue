@@ -1,17 +1,14 @@
 <template>
-    <div class="block content is-unselectable">
-        <p class="card-suit is-size-6 has-text-weight-bold has-text-centered">
-            <span v-for="v in bidValues" :key=v>
-                <span class="card-text is-uppercase is-clickable mr-5" @click="onSelectBid(v, null)"
-                v-bind:class="[v == value ? 'card-black' : 'has-text-grey']">{{v}}</span>
-            </span>
-            <span v-bind:class="[suit == trump ? suitColor(suit) : 'has-text-grey', 'mr-5']" v-for="suit in bidTrumps" :key=suit>
-                <span class="card-text is-uppercase is-clickable" @click="onSelectBid(null, suit)">{{suitSymbol(suit)}}</span>
-            </span>
-            <span class="mr-4 has-text-success-dark is-clickable" @click="onSelectBid('pass', null)">PASS</span>
-            <span class="mr-4 has-text-danger-dark is-clickable" @click="onSelectBid('double', null)">X</span>
-            <span class="mr-4 has-text-info-dark is-clickable" @click="onSelectBid('redouble', null)">XX</span>
-        </p>
+    <div class="flex space-x-3 sm:space-x-6 justify-center cursor-default font-textcards font-bold text-center">
+        <div v-for="v in bidValues" :key=v class="inline-flex uppercase cursor-pointer" v-bind:class="[v == value ? 'text-gray-800' : 'text-gray-500']" @click="onSelectBid(v, null)">
+            {{v}}
+        </div>
+        <div class="inline-flex" v-bind:class="[suit == trump ? suitColor(suit) : 'text-gray-500', 'mr-5']" v-for="suit in bidTrumps" :key=suit>
+            <span class="uppercase cursor-pointer" @click="onSelectBid(null, suit)">{{suitSymbol(suit)}}</span>
+        </div>
+        <div class="inline-flex text-green-600 cursor-pointer" @click="onSelectBid('pass', null)">PASS</div>
+        <div class="inline-flex text-red-600 cursor-pointer" @click="onSelectBid('double', null)">X</div>
+        <div class="inline-flex text-sky-600 cursor-pointer" @click="onSelectBid('redouble', null)">XX</div>
     </div>
 </template>
 
@@ -31,8 +28,7 @@ export default {
     },
     methods: {
         suitColor(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
+            return GameHelpers.suitColor(suit);
         },
         suitSymbol(suit) {
             return GameHelpers.suitIcon(suit);

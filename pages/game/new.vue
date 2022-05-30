@@ -1,60 +1,50 @@
 <template>
-    <div class="container">
+    <div class="container mx-auto text-gray-800">
         <AlertModal ref="alertModal" />
-        <p class="title is-2 is-capitalized has-text-weight-bold has-text-centered">New Game</p>
-        <p class="title is-6 mb-3">Random hands by custom rules</p>
-        <div class="field has-addons">
-            <p class="control">
-                <a class="button light-shadow is-light has-text-weight-bold disabled">Example Rules:</a>
-            </p>
-            <div class="control">
-                <div class="select">
-                    <select name="predefinedRule" v-model="selectedPredefinedRule">
-                        <option :value=index v-for="(item, index) in ruleExamples" :key=index>{{item.name}}</option>
-                    </select>
-                </div>
+        <p class="text-4xl font-bold mb-6 text-center">New Game</p>
+        <div class="space-y-2">
+            <p class="text-lg font-bold leading-6">Random hands by custom rules</p>
+            <div class="flex">
+                <div class="hidden sm:inline-flex rounded-l bg-slate-100 capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 pr-0">Example Rules:</div>
+                <select class="inline-flex text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-slate-100 outline-0" name="predefinedRule" v-model="selectedPredefinedRule">
+                    <option :value=index v-for="(item, index) in ruleExamples" :key=index>{{item.name}}</option>
+                </select>
+                <button @click="setPredefinedRule()" class="inline-flex rounded-r hover:shadow-md bg-emerald-500 text-white capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3">Select Rule</button>
             </div>
-            <div class="control">
-                <button class="button light-shadow is-success has-text-weight-bold" @click="setPredefinedRule()">Select Rule</button>
-            </div>
+            <textarea class="font-mono resize-none w-full shadow md:rounded-md bg-slate-800 text-slate-50 ligatures-none outline-0 p-4 leading-4 text-xs md:leading-6 md:text-sm" rows="4" placeholder="i.e.: north.spades(4).clubs(3,5,+KJ,-AQ) east.diamonds(2)" v-model='rule' spellcheck="false"></textarea>
         </div>
-        <div class="field">
-            <div class="control">
-                <textarea class="textarea has-text-weight-bold mono-font code-text" placeholder="i.e.: north.spades(4).clubs(3,5,+KJ,-AQ) east.diamonds(2)" v-model='rule' spellcheck="false"></textarea>
-            </div>
-        </div>
-        <div class="buttons is-right">
-            <button class="button light-shadow is-success has-text-weight-bold is-capitalized" @click="newRule()">Apply rule</button>
-            <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanRule()">Clean rule</button>
-            <button class="button light-shadow is-light has-text-weight-bold" @click="goToHelp('rules')">
-                <span class="icon is-small material-icons-outlined mr-1">info</span> Learn More on Rules
+        <div class="flex space-x-2 justify-end">
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-emerald-500 text-white" @click="newRule()">Apply rule</button>
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="cleanRule()">Clean rule</button>
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="goToHelp('rules')">
+                <span class="hidden md:inline-block material-icons-outlined">info</span>
+                <span class="text-xs md:hidden material-icons-outlined">info</span>
             </button>
         </div>
-        <div class="buttons">
-            <button class="button light-shadow is-light has-text-weight-bold" @click="toggleShowCard()">
-                <span v-if="showCards" class="icon is-small material-icons-outlined">visibility_off</span>
-                <span v-if="!showCards" class="icon is-small material-icons-outlined">visibility</span>
+        <div class="flex space-x-2 justify-start mt-2">
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold py-1 px-2 md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleShowCard()">
+                <span v-if="showCards" class="hidden md:inline-block material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
+                <span v-if="showCards" class="text-xs md:hidden material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
             </button>
-            <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="loadCustomCardsTrigger()">Load cards from file</button>
-            <button class="button light-shadow is-warning has-text-weight-bold is-capitalized" @click="cleanCustomCardDeck()">Clean all cards</button>
-            <button class="button light-shadow is-info has-text-weight-bold is-capitalized" @click="createRandomCardDeck()">Random cards</button>
-            <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="cardsToRule()" v-if="gameCustoms.cards.length > 0">Edit as rule</button>
-            <button class="button light-shadow is-light has-text-weight-bold is-capitalized" @click="downloadCardDeck()" v-if="gameCustoms.cards.length > 0">Export Card Deck</button>
+            <button class="hidden md:inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="loadCustomCardsTrigger()">Load cards from file</button>
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="cleanCustomCardDeck()">Clean all cards</button>
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-sky-600 text-white" @click="createRandomCardDeck()">Random cards</button>
+            <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="cardsToRule()" v-if="gameCustoms.cards.length > 0">Edit as rule</button>
+            <button class="hidden md:inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="downloadCardDeck()" v-if="gameCustoms.cards.length > 0">Export Card Deck</button>
         </div>
-        <PlayerCards :players=customPlayerCards :onlyRemainingCards='false' :showPoints='true' class="mb-3 is-fullwidth is-bordered" v-if="showCards" />
+        <PlayerCards :players=customPlayerCards :onlyRemainingCards='false' :showPoints='true' class="mt-3 mb-3" v-if="showCards" />
 
-        <input class="is-hidden" ref="fileCardsInput" type="file" name="customCardFile" accept="application/json" @change="loadCustomCardDeck($event)">
-        <input class="is-hidden" ref="fileGameInput" type="file" name="gameFile" accept="application/json" @change="loadSavedGame($event)">
+        <input class="hidden" ref="fileCardsInput" type="file" name="customCardFile" accept="application/json" @change="loadCustomCardDeck($event)">
+        <input class="hidden" ref="fileGameInput" type="file" name="gameFile" accept="application/json" @change="loadSavedGame($event)">
 
-        <div class="block" v-if="selectedScoreRange.team && showCards">
-            <div class="has-text-centered is-size-6 is-italic">
-                The top team is <span class="is-capitalized">{{selectedScoreRange.team}}</span> with {{selectedScoreRange.points}} total HCP.
-            </div>
+        <div class="text-base text-center italic" v-if="selectedScoreRange.team && showCards">
+            The top team is <span class="capitalized">{{selectedScoreRange.team}}</span> with {{selectedScoreRange.points}} total HCP.
         </div>
-        <hr class="hr mb-6" v-if="!showCards">
-        <div class="buttons is-centered">
-            <button class="button light-shadow is-success is-medium has-text-weight-bold is-capitalized" @click="createNewGame()">Play</button>
-            <button class="button light-shadow is-light is-medium has-text-weight-bold is-capitalized" @click="loadSavedGameTrigger()">Load Game</button>
+
+        <hr class="hr mt-6" v-if="!showCards">
+        <div class="flex mt-6 space-x-2 justify-center">
+            <button class="rounded shadow hover:shadow-md bg-emerald-500 text-white font-bold text-lg py-3 px-6 lg:text-xl" @click="createNewGame()">Play</button>
+            <button class="rounded shadow hover:shadow-md bg-gray-100 text-gray-700 font-bold text-lg py-3 px-6 lg:text-xl" @click="loadSavedGameTrigger()">Load Game</button>
         </div>
     </div>
 </template>
@@ -82,16 +72,6 @@ export default {
     methods: {
         toggleShowCard() {
             this.showCards = !this.showCards;
-        },
-        suitColor(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
-        },
-        suitSymbol(suit) {
-            return GameHelpers.suitIcon(suit);
-        },
-        valueIcon(card_value) {
-            return GameHelpers.cardValueIcon(card_value);
         },
         cleanRule() {
             this.rule = '';
