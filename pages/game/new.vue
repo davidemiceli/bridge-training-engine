@@ -23,8 +23,8 @@
         </div>
         <div class="flex space-x-2 justify-start mt-2">
             <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold py-1 px-2 md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleShowCard()">
-                <span v-if="showCards" class="hidden md:inline-block material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
-                <span v-if="showCards" class="text-xs md:hidden material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
+                <span class="hidden md:inline-block material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
+                <span class="text-xs md:hidden material-icons-outlined">{{showCards ? 'visibility_off' : 'visibility'}}</span>
             </button>
             <button class="hidden md:inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="loadCustomCardsTrigger()">Load cards from file</button>
             <button class="inline-flex rounded shadow hover:shadow-md capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="cleanCustomCardDeck()">Clean all cards</button>
