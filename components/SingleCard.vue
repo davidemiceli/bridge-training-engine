@@ -1,10 +1,10 @@
 <template>
-    <component :is=tagType v-bind:class="['is-size-'+cardSize]">
-        <span class="card-suit has-text-weight-bold" v-if="shapeKind == 'chars'">
-          <span class="card-text is-uppercase" v-bind:class="[suitColorClass]" v-if="card">{{valueIcon}} {{suitIcon}}</span>
+    <component :is=tagType>
+        <span class="font-textcards font-bold" v-if="shapeKind == 'chars'">
+          <span class="card-text uppercase" v-bind:class="[suitColorClass]" v-if="card">{{valueIcon}} {{suitIcon}}</span>
         </span>
-        <span class="card-shape" v-if="shapeKind == 'cards'">
-          <span class="card-invisible" v-if="missingPlaceholder && !card">{{cardUnicode('hidden')}}</span>
+        <span class="font-cards" v-if="shapeKind == 'cards'">
+          <span class="text-gray-500" v-if="missingPlaceholder && !card">{{cardUnicode('hidden')}}</span>
           <span v-bind:class="[suitColorClass]" v-if="card">{{cardUnicode(card.card_id)}}</span>
         </span>
     </component>
@@ -25,11 +25,6 @@ export default {
       required: false,
       type: Boolean,
       default: false
-    },
-    cardSize: {
-      required: false,
-      type: Number,
-      default: 5
     },
     tagType: {
       required: false,
@@ -53,8 +48,7 @@ export default {
       suitColorClass: function() {
           const { card } = this;
           if (!card) return '';
-          const color = GameHelpers.suitColor(card.suit);
-          return `card-${color}`;
+          return GameHelpers.suitColor(card.suit);
       },
       suitIcon: function() {
           return GameHelpers.suitIcon(this.card.suit);

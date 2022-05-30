@@ -1,17 +1,14 @@
 <template>
-    <div class="tile is-ancestor is-flex-wrap-wrap is-mobile is-clickable" @click="onClickPanel">
-        <div class="tile is-3 is-parent" v-for="player_id in loopPlayers" :key="player_id">
-            <div class="tile is-child is-flex is-justify-content-center is-align-items-center">
-                <h4 class="is-size-6 is-uppercase has-text-weight-bold">{{player_id}}</h4>
-            </div>
+    <div class="grid grid-cols-4 gap-3 text-center items-center place-content-center cursor-pointer text-sm sm:gap-4 sm:text-5xl" @click="onClickPanel">
+        <div class="col-span-1 text-gray-700" v-for="player_id in loopPlayers" :key="player_id">
+            <div class="block md:hidden text-xs font-bold uppercase mb-2">{{player_id.charAt(0)}}</div>
+            <div class="hidden md:block text-lg font-bold uppercase mb-2">{{player_id}}</div>
         </div>
-        <div class="tile is-3 is-parent" v-for="(b, i) in bidList" :key=i>
-            <div class="tile is-child is-flex is-justify-content-center card-suit is-size-6 has-text-weight-bold">
-                <span class="card-text is-uppercase" v-bind:class="[suitColor(b.name.suit)]" v-if="isNormalBid(b.id)">{{b.name.value}} {{suitSymbol(b.name.suit)}}</span>
-                <span class="has-text-success-dark" v-if="b.id == 'pass'">PASS</span>
-                <span class="has-text-danger-dark" v-if="b.id == 'double'">X</span>
-                <span class="has-text-info-dark" v-if="b.id == 'redouble'">XX</span>
-            </div>
+        <div class="col-span-1 font-bold text-xs md:text-lg" v-for="(b, i) in bidList" :key=i>
+            <span class="font-textcards uppercase" v-bind:class="[suitColor(b.name.suit)]" v-if="isNormalBid(b.id)">{{b.name.value}} {{suitSymbol(b.name.suit)}}</span>
+            <strong class="text-green-600" v-if="b.id == 'pass'">PASS</strong>
+            <strong class="text-red-600" v-if="b.id == 'double'">X</strong>
+            <strong class="text-sky-600" v-if="b.id == 'redouble'">XX</strong>
         </div>
     </div>
 </template>
@@ -33,8 +30,7 @@ export default {
             this.$emit('onClickPanel');
         },
         suitColor(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
+            return GameHelpers.suitColor(suit);
         },
         suitSymbol(suit) {
             return GameHelpers.suitIcon(suit);

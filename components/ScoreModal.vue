@@ -1,63 +1,55 @@
 <template>
-    <div class="modal is-active">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-
-            <header class="modal-card-head">
-                <p class="modal-card-title icon-text">
-                    <span class="icon material-icons">emoji_events</span>
+    <div class="absolute inset-0 z-30 bg-black/20 flex items-center justify-center">
+        <div class="w-full max-w-md shadow-lg rounded-lg p-4 bg-white leading-8">
+            <div class="flex items-center justify-between pb-4 border-b border-b-gray-200">
+                <h3 class="text-2xl text-gray-800 font-bold flex items-center">
+                    <span class="material-icons mr-2">emoji_events</span>
                     <span>Scores</span>
-                </p>
-            </header>
+                </h3>
+            </div>
+            <div class="mt-6 text-center">
+                <p><span class="material-icons text-yellow-600">emoji_events</span></p>
+                <p class="text-lg mb-6 font-bold uppercase" v-bind:class="[winnerTeam]">{{winnerTeam}}</p>
 
-            <section class="modal-card-body">
-                <p class="has-text-centered"><span class="material-icons has-text-warning-dark">emoji_events</span></p>
-                <p class="is-size-5 mb-6 has-text-centered has-text-weight-bold is-uppercase" v-bind:class="[winnerTeam]">{{winnerTeam}}</p>
+                <table class="table table-auto w-full border-collapse bg-white font-bold text-center">
+                    <thead>
+                        <tr>
+                            <th class="border-b border-slate-100 p-2">Team</th>
+                            <th class="border-b border-slate-100 p-2">Contract</th>
+                            <th class="border-b border-slate-100 p-2">Bonus</th>
+                            <th class="border-b border-slate-100 p-2">Score</th>
+                            <th class="border-b border-slate-100 p-2">Total score</th>
+                            <th class="border-b border-slate-100 p-2">Tricks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="s in score" :key=s.team_id>
+                            <td class="border-b border-slate-100 p-2 uppercase" v-bind:class="[s.team_id]">{{teamAbbr(s.team_id)}}</td>
+                            <td class="border-b border-slate-100 p-2">
+                                <SingleCard :card=contractName :cardSize='6' class="has-text-centered" v-if="s.contract" />
+                            </td>
+                            <td class="border-b border-slate-100 p-2">
+                                <span v-if="s.contract">{{s.bonus_kind}} +{{s.bonus}}</span>
+                            </td>
+                            <td class="border-b border-slate-100 p-2">{{s.score}}</td>
+                            <td class="border-b border-slate-100 p-2">
+                                <span v-if="s.contract">{{s.score + s.bonus}}</span>
+                                <span v-if="!s.contract">{{s.score}}</span>
+                            </td>
+                            <td class="border-b border-slate-100 p-2">
+                                <span v-if="s.contract">{{deltaTricks(s.winned_tricks - 6 - contract.value)}}</span>
+                                <span v-if="!s.contract">{{deltaTricks(s.winned_tricks - (7 - contract.value))}}</span>
+                                <span>({{s.winned_tricks}})</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <!-- Score table -->
-                <div class="table-container">
-                    <table class="table is-fullwidth has-text-centered has-text-weight-bold">
-                        <thead>
-                            <tr>
-                                <th>Team</th>
-                                <th>Contract</th>
-                                <th>Bonus</th>
-                                <th>Score</th>
-                                <th>Total score</th>
-                                <th>Tricks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="s in score" :key=s.team_id>
-                                <td class="is-vcentered is-uppercase" v-bind:class="[s.team_id]">{{teamAbbr(s.team_id)}}</td>
-                                <td class="is-vcentered">
-                                    <SingleCard :card=contractName :cardSize='6' class="has-text-centered" v-if="s.contract" />
-                                </td>
-                                <td class="is-vcentered">
-                                    <span v-if="s.contract">{{s.bonus_kind}} +{{s.bonus}}</span>
-                                </td>
-                                <td class="is-vcentered">{{s.score}}</td>
-                                <td class="is-vcentered">
-                                    <span v-if="s.contract">{{s.score + s.bonus}}</span>
-                                    <span v-if="!s.contract">{{s.score}}</span>
-                                </td>
-                                <td class="is-vcentered">
-                                    <span v-if="s.contract">{{deltaTricks(s.winned_tricks - 6 - contract.value)}}</span>
-                                    <span v-if="!s.contract">{{deltaTricks(s.winned_tricks - (7 - contract.value))}}</span>
-                                    <span>({{s.winned_tricks}})</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="mt-4 text-right space-x-2">
+                    <NuxtLink to="" class="rounded-md shadow hover:shadow-md capitalize font-bold text-base py-2 px-4 bg-gray-100 text-gray-700" @click.native="onClickClose()">Close</NuxtLink>
+                    <NuxtLink to="/game/new" class="rounded-md shadow hover:shadow-md capitalize font-bold text-base py-2 px-4 bg-emerald-500 text-white">New game</NuxtLink>
                 </div>
-                <!-- Score table -->
-            </section>
-
-            <footer class="modal-card-foot" style="justify-content: center;">
-                <NuxtLink to="" class="button is-medium is-light has-text-weight-bold light-shadow is-capitalized" @click.native="onClickClose()">Close</NuxtLink>
-                <NuxtLink to="/game/new" class="button is-medium is-success has-text-weight-bold light-shadow is-capitalized">New game</NuxtLink>
-            </footer>
-
+            </div>
         </div>
     </div>
 </template>

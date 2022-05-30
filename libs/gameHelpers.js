@@ -149,7 +149,7 @@ export default new class {
     }
   
     suitColor(suit) {
-        return (suit === 'diamonds' || suit === 'hearts') ? 'red' : 'black';
+        return (suit === 'diamonds' || suit === 'hearts') ? 'text-red-600' : 'text-neutral-800';
     }
 
     suitIcon(card_suit) {

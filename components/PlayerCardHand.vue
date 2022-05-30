@@ -1,25 +1,25 @@
 <template>
-    <div class="block">
-        <div class="is-size-6 has-text-weight-bold is-uppercase icon-text" v-bind:class="[player.dummy ? 'has-text-warning-dark' : 'has-text-black']">
+    <div>
+        <div class="text-sm md:text-base font-bold uppercase" v-bind:class="[player.dummy ? 'text-amber-600' : '']">
             <span>{{player.id}}</span>
             <span class="ml-1" v-if="player.dummy">(dummy)</span>
-            <span class="icon material-icons has-text-success-dark is-size-7" v-if="interactive && player.isturn">circle</span>
+            <span class="text-xs material-icons text-green-800" v-if="interactive && player.isturn">circle</span>
         </div>
-        <div class="is-size-6 has-text-weight-bold mb-1" v-if="player.showdata">{{points}} HCP ({{cardDistribution}} distribution)</div>
-        <div v-if="shapeKind == 'chars'">
-            <div v-for="suit in suitValues" :key=suit class="is-size-4 has-text-weight-bold is-unselectable" v-bind:class="[suitColor(suit)]">
-                <span class="card-suit">{{suitIcon(suit)}}</span>
-                <span class="material-icons has-text-weight-bold has-text-grey-light" v-if="!player.show">horizontal_rule</span>
+        <div class="text-xs md:text-base font-bold text-gray-700" v-if="player.showdata">{{points}} HCP ({{cardDistribution}} distribution)</div>
+        <div v-if="shapeKind == 'chars'" class="mt-2">
+            <div v-for="suit in suitValues" :key=suit class="font-bold is-unselectable" v-bind:class="[suitColor(suit)]">
+                <span class="font-textcards">{{suitIcon(suit)}}</span>
+                <span class="material-icons font-bold has-text-grey-light" v-if="!player.show">horizontal_rule</span>
                 <span v-if="player.show">
                     <span v-for="c in getCards(suit, player.cards)" :key=c.card_id class="ml-1" v-bind:class="[clickableCard]" @click="onClickCard(c)">{{cardValueIcon(c.value)}}</span>
                 </span>
             </div>
         </div>
-        <div v-if="shapeKind == 'cards'" class="card-shape is-size-1 is-unselectable">
+        <div v-if="shapeKind == 'cards'" class="mt-1 font-cards leading-cards text-3xl md:text-5xl">
             <div v-if="inlineAlternate && ((player.id == 'east') || (player.id == 'west'))">
-                <div v-if="!player.show" class="has-text-grey">
+                <div v-if="!player.show" class="text-gray-500">
                     <div v-for="(s, index) in hiddenPlayerCards" :key=index>
-                        <span v-for="(c, index_c) in s" :key=index_c>{{cardUnicode('hidden')}}</span>
+                        <div v-for="(c, index_c) in s" :key=index_c class="inline-flex">{{cardUnicode('hidden')}}</div>
                     </div>
                 </div>
                 <div v-if="player.show">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div v-if="!inlineAlternate || ((player.id == 'north') || (player.id == 'south'))">
-                <div v-if="!player.show" class="has-text-grey"><span v-for="c in sortedPlayerCards" :key=c.card_id>{{cardUnicode('hidden')}}</span></div>
+                <div v-if="!player.show" class="text-gray-500"><span v-for="c in sortedPlayerCards" :key=c.card_id>{{cardUnicode('hidden')}}</span></div>
                 <div v-if="player.show">
                     <span v-for="c in sortedPlayerCards" :key=c.card_id @click="onClickCard(c)" v-bind:class="[suitColor(c.suit), clickableCard]">{{cardUnicode(c.card_id)}}</span>
                 </div>
@@ -70,8 +70,7 @@ export default {
             return suitFiltered;
         },
         suitColor(suit) {
-            const suit_color = GameHelpers.suitColor(suit);
-            return `card-${suit_color}`;
+            return GameHelpers.suitColor(suit);
         },
         cardValueIcon(v) {
             return GameHelpers.cardValueIcon(v);
@@ -117,7 +116,7 @@ export default {
             return distributions.join("");
         },
         clickableCard() {
-            return this.interactive ? 'is-clickable' : '';
+            return this.interactive ? 'cursor-pointer' : '';
         }
     }
 }

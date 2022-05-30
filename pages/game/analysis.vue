@@ -1,11 +1,10 @@
 <template>
 
     <div>
-        <div class="container is-block">
+        <div class="container mx-auto text-gray-800 mb-8 border-b border-b-gray-200 divide-y divide-gray-200">
             <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=contract :tricks=tricks />
-            <hr class="hr-light">
         </div>
-        <GameAnalysis class="container is-block" :players='sideBySidePlayersData()' :contract=contract :tricks=tricks v-if="tricks.length > 0" />
+        <GameAnalysis class="container mx-auto text-gray-800 mb-6" :players='sideBySidePlayersData()' :contract=contract :tricks=tricks v-if="tricks.length > 0" />
     </div>
 
 </template>

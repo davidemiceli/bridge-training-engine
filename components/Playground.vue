@@ -1,23 +1,17 @@
 <template>
-    <div class="tile is-ancestor is-mobile is-clickable">
-        <div class="tile is-4 is-vertical is-parent">
-            <div class="tile is-child is-flex is-justify-content-center is-align-items-center">
-                <SingleCard :card=playedCardWest :missingPlaceholder='true' :shapeKind=shapeKind :cardSize=cardSize />
-            </div>
+    <div class="grid grid-cols-3 gap-4 text-center items-center place-content-center text-3xl cursor-pointer sm:gap-8 sm:text-5xl">
+        <div class="col-span-3">
+            <SingleCard :card=playedCardNorth :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
-        <div class="tile is-4 is-vertical is-parent">
-            <div class="tile is-child is-flex is-justify-content-center">
-                <SingleCard :card=playedCardNorth :missingPlaceholder='true' :shapeKind=shapeKind :cardSize=cardSize />
-            </div>
-            <div class="tile is-child"></div>
-            <div class="tile is-child is-flex is-justify-content-center">
-                <SingleCard :card=playedCardSouth :missingPlaceholder='true' :shapeKind=shapeKind :cardSize=cardSize />
-            </div>
+        <div class="col-span-1">
+            <SingleCard :card=playedCardEast :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
-        <div class="tile is-4 is-vertical is-parent">
-            <div class="tile is-child is-flex is-justify-content-center is-align-items-center">
-                <SingleCard :card=playedCardEast :missingPlaceholder='true' :shapeKind=shapeKind :cardSize=cardSize />
-            </div>
+        <div class="col-span-1"></div>
+        <div class="col-span-1">
+            <SingleCard :card=playedCardWest :shapeKind=shapeKind :missingPlaceholder='true' />
+        </div>
+        <div class="col-span-3">
+            <SingleCard :card=playedCardSouth :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
     </div>
 </template>
@@ -42,9 +36,6 @@ export default {
     },
   },
   computed: {
-    cardSize() {
-      return this.shapeKind == 'chars' ? 4 : 1;
-    },
     playedCardSouth() {
       return this.playedCardBy('south');
     },

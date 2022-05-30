@@ -1,92 +1,48 @@
 <template>
-
     <div>
-
         <AlertModal ref="alertModal" />
         <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.donePerc @cancelClicked='taskPlayOpts.cancel = true' />
         <ScoreModal :score=gameState.score :contract=gameState.contract @onClickClose="scoreModalToggle" v-if="handEnded && scoreModalOpen" />
 
-        <div class="container">
+        <div class="container mx-auto text-gray-800 mb-8 border-b border-b-gray-200 divide-y divide-gray-200">
 
-            <div class="is-block">
-                <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=gameState.contract :tricks=gameState.tricks />
+            <PlayOverview :gameTime='timerClock.format("mm:ss")' :contract=gameState.contract :tricks=gameState.tricks />
+
+            <div class="flex space-x-1 sm:space-x-2 justify-center items-center pt-2 pb-2">
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-emerald-100 text-teal-800" @click="autoContract" v-if='!contractWasDefined'><span class="text-sm md:text-xl material-icons mr-1">gavel</span>Auto Contract</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-emerald-100 text-teal-800" @click="playAuto" v-if='contractWasDefined'><span class="text-sm md:text-xl material-icons mr-1">precision_manufacturing</span>AI Play</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playUndo"><span class="text-sm md:text-xl material-icons mr-1">replay</span>Undo</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playSolve"><span class="text-sm md:text-xl material-icons mr-1">auto_awesome</span>AI Solve</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playUndoAll"><span class="text-sm md:text-xl material-icons mr-1">restart_alt</span>Undo All</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="scoreModalToggle" v-if="handEnded"><span class="text-sm md:text-xl material-icons has-text-warning-dark mr-1">emoji_events</span>Results</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-sky-100 text-sky-800" @click="saveGameCheckpoint"><span class="text-sm md:text-xl material-icons mr-1">save</span>Save</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleGamePlayOptions('player_panel_data')"><span class="text-sm md:text-xl material-icons-outlined">scoreboard</span></button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleGamePlayOptions('other_player_cards')"><span class="text-sm md:text-xl material-icons">style</span></button>
             </div>
 
-            <hr class="hr-light mini-margin">
-
-            <div class="is-block">
-                
-                <div class="buttons is-centered">
-                    <button class="button is-light is-success has-text-weight-bold" @click="autoContract" v-if='!contractWasDefined'><span class="icon is-small material-icons mr-1">gavel</span>Auto Contract</button>
-                    <button class="button is-light is-success has-text-weight-bold" @click="playAuto" v-if='contractWasDefined'><span class="icon is-small material-icons mr-1">precision_manufacturing</span>AI Play</button>
-                    <button class="button is-light has-text-weight-bold" @click="playUndo"><span class="icon is-small material-icons mr-1">replay</span>Undo</button>
-                    <button class="button is-light has-text-weight-bold" @click="playSolve"><span class="icon is-small material-icons mr-1">auto_awesome</span>AI Solve</button>
-                    <button class="button is-light has-text-weight-bold" @click="playUndoAll"><span class="icon is-small material-icons mr-1">restart_alt</span>Undo All</button>
-                    <button class="button is-light has-text-weight-bold" @click="scoreModalToggle" v-if="handEnded"><span class="icon is-small material-icons has-text-warning-dark mr-1">emoji_events</span>Results</button>
-                    <button class="button is-light is-info has-text-weight-bold" @click="saveGameCheckpoint"><span class="icon is-small material-icons mr-1">save</span>Save</button>
-                    <div class="dropdown is-hoverable">
-                        <div class="dropdown-trigger">
-                            <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
-                                <span aria-hidden="true" class="icon is-small material-icons">menu</span>
-                            </button>
-                        </div>
-                        <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-                            <div class="dropdown-content has-text-left is-vcentered">
-                                <a class="dropdown-item" @click="playUndo"><span class="material-icons is-size-5 mr-2">replay</span> Undo last action</a>
-                                <a class="dropdown-item" @click="playAuto"><span class="material-icons is-size-5 mr-2">precision_manufacturing</span> AI play next card</a>
-                                <hr class="dropdown-divider">
-                                <a class="dropdown-item" @click="toggleGamePlayOptions('player_panel_data')">
-                                    <span class="material-icons is-size-5 mr-2">bar_chart</span>
-                                    <span v-if="uiPlayOptions.player_panel_data == false">Show</span>
-                                    <span v-if="uiPlayOptions.player_panel_data == true">Hide</span> player points
-                                </a>
-                                <a class="dropdown-item" @click="toggleGamePlayOptions('other_player_cards')">
-                                    <span class="material-icons is-size-5 mr-2">style</span>
-                                    <span v-if="uiPlayOptions.other_player_cards == false">Show</span>
-                                    <span v-if="uiPlayOptions.other_player_cards == true">Hide</span> cards of all players
-                                </a>
-                                <a class="dropdown-item" @click="setUiPlayOpts('shapeKind', uiPlayOpts.shapeKind == 'cards' ? 'chars' : 'cards')">
-                                    <span class="material-icons is-size-5 mr-2">margin</span> Display
-                                    <span v-if="uiPlayOpts.shapeKind == 'cards'">cards as text</span>
-                                    <span v-if="uiPlayOpts.shapeKind == 'chars'">as cards</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="is-block" v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()'>
-                <hr class="hr-light mini-margin">
-                <BiddingBoxPlayer :playerId=turnOfPlayerId @onSelectBid=playBid />
-            </div>
-
-            <hr class="hr-light mini-margin">
+            <BiddingBoxPlayer class="py-3" :playerId=turnOfPlayerId @onSelectBid=playBid v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()' />
         </div>
 
-        <div class="columns is-multiline is-mobile">
-            <div class="column is-12 is-flex is-justify-content-center">
+        <div class="grid grid-cols-3 gap-4 sm:gap-8 justify-center items-center place-content-center text-5xl">
+            <div class="col-span-3 justify-self-center">
                 <PlayerCardHand :player="playersData('north')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
-            <div class="column is-4 is-flex is-justify-content-end">
+            <div class="col-span-1 justify-self-end">
                 <PlayerCardHand :player="playersData('west')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
-            <div class="column is-4 is-flex is-align-items-center">
+            <div class="col-span-1">
                 <BiddingBoard :bids=bids :loopPlayers=gameState.loop_players @onClickPanel=playNext v-if='!contractWasDefined' />
                 <Playground :playedCards=playedCards :shapeKind=uiPlayOpts.shapeKind @onClickPanel=playNext v-if='contractWasDefined' />
             </div>
-            <div class="column is-4 is-flex is-justify-content-start">
+            <div class="col-span-1 justify-self-start">
                 <PlayerCardHand :player="playersData('east')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
-            <div class="column is-12 is-flex is-justify-content-center">
+            <div class="col-span-3 justify-self-center">
                 <PlayerCardHand :player="playersData('south')" :shapeKind=uiPlayOpts.shapeKind @onClickCard=playNext />
             </div>
         </div>
 
     </div>
-
 </template>
 
 <script>
