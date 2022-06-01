@@ -1,5 +1,5 @@
 <template>
-    <header class="flex-none relative z-10 text-base leading-6 font-menu py-4 text-gray-700 bg-white" v-bind:class="[withMenu ? 'ring-1 ring-gray-300' : '']">
+    <header class="flex-none relative z-10 text-base leading-6 font-menu py-4 text-gray-700 bg-white" v-bind:class="[withMenu ? 'border-b border-b-gray-300' : '']">
 
         <nav aria-label="main navigation" class="container mx-auto px-8 xl:px-16">
             <div class="flex items-center flex-wrap sm:flex-nowrap">

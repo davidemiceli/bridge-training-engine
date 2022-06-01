@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col h-screen">
-        <TheNavbar :withMenu='true' />
+        <Navbar :withMenu='true' />
         <Nuxt class="mb-auto mt-8 font-display" />
         <Footer />
     </div>

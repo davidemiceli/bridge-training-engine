@@ -23,8 +23,8 @@ export default {
   head: {
     title: 'Bridge Training Engine',
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'charset', charset: 'utf-8' },
+      { hid: 'viewport', name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
       { hid: 'author', name: 'author', content: 'Davide Miceli' },
       { hid: 'description', name: 'description', content: 'A Free and Open Source platform for Bridge Training.' },
       { hid: 'keywords', name: 'keywords', content: 'bridge, free, online bridge, play bridge, play cards, rubber bridge, acbl, duplicate bridge' }
@@ -38,7 +38,7 @@ export default {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined' }
     ],
     script: [
-    ],
+    ]
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
