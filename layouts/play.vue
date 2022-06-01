@@ -15,7 +15,7 @@ export default {
   head() {
     return {
       meta: [
-        { hid: 'viewport', name: 'viewport', content: 'width=1280,initial-scale=0' }
+        { hid: 'viewport', name: 'viewport', content: 'width=900,initial-scale=0' }
       ]
     }
   }
