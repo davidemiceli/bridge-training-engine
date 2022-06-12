@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col h-screen">
-        <Navbar class="is-fixed-top bg-light-white navbar-border" :withMenu='true' />
+        <Navbar class="sticky top-0 z-50" :withMenu='true' />
         <Nuxt class="mb-auto mt-8 font-play" />
         <Footer />
     </div>

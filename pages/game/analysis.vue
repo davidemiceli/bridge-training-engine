@@ -12,11 +12,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import GameHelpers from '@/libs/gameHelpers';
-import gameNotCreatedMiddleware from '@/libs/customMiddlewares/gameNotCreated';
 
 
 export default {
     layout: 'play',
+    middleware: ['tableNotCreated', 'gameNotCreated'],
     methods: {
         playersData(playerId) {
             const p = GameHelpers.getPlayer(this.players, playerId);
@@ -43,9 +43,6 @@ export default {
         contract() {
             return this.gameState.contract;
         }
-    },
-    async mounted() {
-        return await gameNotCreatedMiddleware(this);
     }
 }
 </script>

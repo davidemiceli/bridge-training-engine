@@ -7,12 +7,14 @@
                 If you use Bridge Training Engine and feel it is useful to you, please consider backing us.<br />
                 Support becoming a Sponsor with free donations.
             </p>
-            <p class="mt-6">
-                <a 
-                    href="https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=20&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine"
-                    target="_blank" class="rounded shadow bg-gray-100 hover:shadow-md py-3 px-6 font-bold text-md text-gray-700 inline-flex items-center">
-                    <img src="PayPalDonate.svg" class="fill-current w-30">
-                </a>
+        </div>
+        <div class="mt-6 text-center">
+            <p class="flex justify-center py-6"><img src="PayPalDonate.svg" class="fill-current w-30"></p>
+            <div>
+                <button v-for="(a,i) in amts" :key=i class="rounded-lg box-border border-2 shadow hover:shadow-md py-3 px-4 font-bold text-md text-gray-700 ml-2 first:ml-0" @click="selectAmount(a)">&euro; {{a}}</button>
+            </div>
+            <p class="mt-4">
+                <button class="rounded-lg box-border border-2 shadow hover:shadow-md py-3 px-4 font-bold text-md text-gray-700 ml-2" @click="selectAmount(0)">&euro; Custom Amount</button>
             </p>
         </div>
     </div>
@@ -20,6 +22,17 @@
 
 <script>
 export default {
-    layout: 'textual'
+    layout: 'textual',
+    data: function() {
+        return {
+            amts: [10, 20, 50, 100, 500]
+        }
+    },
+    methods: {
+        selectAmount(a) {
+            const href = `https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=${a}&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine`;
+            window.open(href, '_blank');
+        }
+    }
 }
 </script>

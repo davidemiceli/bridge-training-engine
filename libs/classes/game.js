@@ -30,13 +30,12 @@ export default class {
     addPlayers(players) {
         this.players = players.map(p => {
             const partnerId = GameHelpers.getPartnerId(p.id);
-            const partner = GameHelpers.getPlayer(players, partnerId);
             return new Player(p);
         });
     }
 
     updateUiPlayOptions(data) {
-        this.settings.uiPlayOptions = Object.assign(this.settings.uiPlayOptions, data);
+        this.settings.uiPlayOptions = Object.assign({}, this.settings.uiPlayOptions, data);
     }
 
     setTimerClock(newTimer) {

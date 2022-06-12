@@ -14,10 +14,10 @@
                 <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playUndo"><span class="text-sm md:text-xl material-icons mr-1">replay</span>Undo</button>
                 <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playSolve"><span class="text-sm md:text-xl material-icons mr-1">auto_awesome</span>AI Solve</button>
                 <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="playUndoAll"><span class="text-sm md:text-xl material-icons mr-1">restart_alt</span>Undo All</button>
-                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="scoreModalToggle" v-if="handEnded"><span class="text-sm md:text-xl material-icons has-text-warning-dark mr-1">emoji_events</span>Results</button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-amber-300 text-gray-700" @click="scoreModalToggle" v-if="handEnded"><span class="text-sm md:text-xl material-icons mr-1">emoji_events</span>Results</button>
                 <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-sky-100 text-sky-800" @click="saveGameCheckpoint"><span class="text-sm md:text-xl material-icons mr-1">save</span>Save</button>
-                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleGamePlayOptions('player_panel_data')"><span class="text-sm md:text-xl material-icons-outlined">scoreboard</span></button>
-                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3 bg-gray-100 text-gray-700" @click="toggleGamePlayOptions('other_player_cards')"><span class="text-sm md:text-xl material-icons">style</span></button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3" v-bind:class="[uiPlayOptions.player_panel_data ? 'bg-emerald-100 text-teal-800' : 'bg-gray-100 text-gray-700']" @click="toggleGamePlayOptions('player_panel_data')"><span class="text-sm md:text-xl material-icons-outlined">scoreboard</span></button>
+                <button class="inline-flex items-center rounded capitalize font-bold text-xs py-1 px-2 md:text-base md:py-2 md:px-3" v-bind:class="[uiPlayOptions.other_player_cards ? 'bg-emerald-100 text-teal-800' : 'bg-gray-100 text-gray-700']" @click="toggleGamePlayOptions('other_player_cards')"><span class="text-sm md:text-xl material-icons">style</span></button>
             </div>
 
             <BiddingBoxPlayer class="py-3" :playerId=turnOfPlayerId @onSelectBid=playBid v-if='!contractWasDefined && turnOfPlayerId && !biddingIsEnding()' />
@@ -47,21 +47,18 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import gameNotCreatedMiddleware from '@/libs/customMiddlewares/gameNotCreated';
 import GameHelpers from '@/libs/gameHelpers';
 
 
 export default {
     layout: 'play',
+    middleware: ['tableNotCreated', 'gameNotCreated'],
     data() {
         return {
             scoreModalOpen: true,
-            alertMsg: null,
             originalLoop: [],
             taskPlayOpts: {title: '', active: false, cancel: false, steps: 0, donePerc: 0},
-            uiPlayOpts: {
-                shapeKind: 'cards'
-            }
+            uiPlayOpts: {shapeKind: 'cards'}
         }
     },
     methods: {
@@ -188,28 +185,34 @@ export default {
         isPlayerTurn(playerId) {
             return this.gameState.current_player === playerId;
         },
-        isDummyPartner(player_id) {
-            return GameHelpers.getPartnerId(this.dummyPlayerId) == player_id;
+        isDummyPartner(playerId) {
+            return GameHelpers.getPartnerId(this.dummyPlayerId) == playerId;
         },
         showDummyPartner(playerId) {
-            const { playerSettings, dummyPlayerId } = this;
+            const { dummyPlayerId } = this;
             const dummy_partner_id = GameHelpers.getPartnerId(dummyPlayerId);
-            return playerId == dummy_partner_id && (playerSettings[dummy_partner_id].show_cards == "yes" || playerSettings[dummyPlayerId].show_cards == "yes");
+            return playerId == dummy_partner_id;
         },
         sideBySidePlayers() {
             const { players, uiPlayOptions } = this;
             const player_ids = uiPlayOptions.inline_cards ? ['north', 'south', 'east', 'west'] : ['north', 'east', 'south', 'west'];
             return player_ids.map(p_id => GameHelpers.getPlayer(players, p_id));
         },
-        playersData(player_id) {
+        playerToEmbody(playerId) {
+            const { username } = this.settings;
+            const { players } = this.table;
+            if (!players || !username) return false;
+            return ['teacher', 'watcher'].includes(players[username].role) || (players[username] && players[username].players.includes(playerId));
+        },
+        playersData(playerId) {
             const show_other_cards = this.uiPlayOptions.other_player_cards;
             const showdata = this.uiPlayOptions.player_panel_data;
-            const p = GameHelpers.getPlayer(this.players, player_id);
+            const p = GameHelpers.getPlayer(this.players, playerId);
             return {
                 ...p,
-                show: show_other_cards || (this.playerSettings[player_id].show_cards == "yes" || (p && p.dummyIsActive && p.dummy)),
+                show: show_other_cards || (this.playerToEmbody(playerId) || (p && p.dummyIsActive && p.dummy)),
                 showdata: showdata,
-                isturn: this.isPlayerTurn(player_id)
+                isturn: this.isPlayerTurn(playerId)
             };
         },
         sideBySidePlayersData() {
@@ -235,8 +238,9 @@ export default {
     },
     computed: {
         ...mapGetters({
+            settings: 'settings/all',
+            table: 'table/all',
             timerClock: 'game/timerClock',
-            playerSettings: 'game/playerSettings',
             gameState: 'game/all',
             gameNotCreated: 'game/notCreated',
             players: 'game/players',
@@ -270,7 +274,9 @@ export default {
             this.incrementTimerClock();
             this.$forceUpdate();
         }, 1000);
-        return await gameNotCreatedMiddleware(this);
+        await this.$store.dispatch('settings/get');
+        await this.$store.dispatch('table/get');
+        return;
     },
     beforeDestroy() {
         clearInterval(this.intervalTimerClock);

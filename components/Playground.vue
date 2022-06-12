@@ -4,11 +4,11 @@
             <SingleCard :card=playedCardNorth :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
         <div class="col-span-1">
-            <SingleCard :card=playedCardEast :shapeKind=shapeKind :missingPlaceholder='true' />
+            <SingleCard :card=playedCardWest :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
         <div class="col-span-1"></div>
         <div class="col-span-1">
-            <SingleCard :card=playedCardWest :shapeKind=shapeKind :missingPlaceholder='true' />
+            <SingleCard :card=playedCardEast :shapeKind=shapeKind :missingPlaceholder='true' />
         </div>
         <div class="col-span-3">
             <SingleCard :card=playedCardSouth :shapeKind=shapeKind :missingPlaceholder='true' />

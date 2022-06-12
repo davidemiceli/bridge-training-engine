@@ -7,10 +7,12 @@
                 <span class="material-icons align-middle">close</span>
             </button>
             <ul class="space-y-4">
-                <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/new')"><span class="material-icons mr-1">add_circle_outline</span>New</button></li>
+                <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/table')"><span class="material-icons-outlined mr-1">space_dashboard</span>Table</button></li>
+                <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/hand')"><span class="material-icons-outlined mr-1">front_hand</span>New Hand</button></li>
                 <li><button class="hover:text-gray-600 flex items-center align-middle" @click='goTo("/game/play")'><span class="material-icons mr-1">play_arrow</span>Play</button></li>
             </ul>
             <ul class="space-y-4 mt-4 pt-4 border-t border-slate-200">
+                <!-- <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/settings')"><span class="material-icons mr-1">settings</span>Settings</button></li> -->
                 <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/cards')"><span class="material-icons mr-1">style</span>Cards</button></li>
                 <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/bids')"><span class="material-icons mr-1">gavel</span>Bids</button></li>
                 <li><button class="hover:text-gray-600 flex items-center align-middle" @click="goTo('/game/analysis')"><span class="material-icons mr-1">analytics</span>Analysis</button></li>

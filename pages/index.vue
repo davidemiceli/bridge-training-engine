@@ -9,7 +9,7 @@
                         Free and Open Source.
                     </p>
                     <p class="mt-4 lg:mt-6">
-                        <NuxtLink to="/game/new" class="rounded shadow hover:shadow-md bg-emerald-500 text-white font-bold text-sm py-3 px-4 sm:py-3 sm:px-6 lg:text-base lg:py-4 lg:px-8">Start Now</NuxtLink>
+                        <NuxtLink to="/game/hand" class="rounded shadow hover:shadow-md bg-emerald-500 text-white font-bold text-sm py-3 px-4 sm:py-3 sm:px-6 lg:text-base lg:py-4 lg:px-8">Start Now</NuxtLink>
                         <a href="https://github.com/davidemiceli/bridge-training-engine" target="_blank" class="rounded shadow hover:shadow-md bg-gray-100 text-gray-700 font-bold text-sm py-3 px-4 sm:py-3 sm:px-6 lg:text-base lg:py-4 lg:px-8">Learn More</a>
                     </p>
                 </div>

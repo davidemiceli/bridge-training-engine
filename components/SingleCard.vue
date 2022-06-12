@@ -4,7 +4,7 @@
           <span class="card-text uppercase" v-bind:class="[suitColorClass]" v-if="card">{{valueIcon}} {{suitIcon}}</span>
         </span>
         <span class="font-cards" v-if="shapeKind == 'cards'">
-          <span class="text-gray-500" v-if="missingPlaceholder && !card">{{cardUnicode('hidden')}}</span>
+          <span class="text-transparent" v-if="missingPlaceholder && !card">{{cardUnicode('hidden')}}</span>
           <span v-bind:class="[suitColorClass]" v-if="card">{{cardUnicode(card.card_id)}}</span>
         </span>
     </component>

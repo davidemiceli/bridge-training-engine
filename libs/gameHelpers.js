@@ -329,22 +329,13 @@ export default new class {
     }
 
     getGameCustoms() {
-        const players = this.players();
         return {
             bidding: 'manual',
             cards: [],
             uiPlayOptions: {
-                auto_play: false,
                 player_panel_data: false,
                 other_player_cards: false
-            },
-            // playground: 'classic-playground',
-            display_cards_top_team: false,
-            display_cards_contract_team: false,
-            players: players.reduce((acc, p) => {
-                acc[p] = {show_cards: 'yes', show_points: 'no'};
-                return acc;
-            }, {})
+            }
         };
     }
 

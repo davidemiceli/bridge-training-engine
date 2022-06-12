@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-screen">
-      <Navbar :withMenu='false' />
+      <Navbar class="sticky top-0 z-50" :withMenu='false' />
       <div class="container mx-auto font-mono text-center mb-auto">
           <div class="mt-6">
               <span class="text-6xl material-icons-outlined text-amber-600" v-if="error.statusCode === 404">error_outline</span>

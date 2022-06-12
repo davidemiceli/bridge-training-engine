@@ -1,6 +1,5 @@
 import moment from 'moment';
 import GameAPIs from '@/services/gameAPIs';
-import GameHelpers from '@/libs/gameHelpers';
 
 
 // Game state store
@@ -28,11 +27,6 @@ export const actions = {
         const data = await GameAPIs.newGame(params);
         ctx.commit('UPDATE', {item: data});
         ctx.commit('RESET_TIMER');
-        return;
-    },
-    async applyGameSettings(ctx, params) {
-        const data = await GameAPIs.newGameSettings(params);
-        ctx.commit('UPDATE', {item: data});
         return;
     },
     async applyUiPlayOptions(ctx, params) {
@@ -80,12 +74,6 @@ export const actions = {
 export const getters = {
     timerClock(state) {
         return moment(state.data.timer_clock);
-    },
-    playerSettings(state) {
-        const { settings } = state.data;
-        const players = GameHelpers.players();
-        const emptyPlayerSettings = players.reduce((acc, i) => { acc[i] = {}; return acc; }, {});
-        return (settings && settings.players) || emptyPlayerSettings;
     },
     all(state) {
         return state.data;

@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-3xl px-2 mx-auto text-gray-800">
+    <div class="max-w-prose px-2 mx-auto text-gray-800">
         <div class="space-y-4 font-bold mb-8">
             <p class="text-4xl">Hand Editor Rules</p>
         </div>

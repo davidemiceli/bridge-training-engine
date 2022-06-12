@@ -31,8 +31,6 @@ export default {
         show(msg) {
             this.msg = msg;
         }
-    },
-    computed: {
     }
 }
 </script>

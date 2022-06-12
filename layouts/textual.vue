@@ -1,13 +1,12 @@
 <template>
     <div class="flex flex-col h-screen">
-        <Navbar :withMenu='true' />
+        <Navbar class="sticky top-0 z-50" :withMenu='true' />
         <Nuxt class="mb-auto mt-8 font-display" />
         <Footer />
     </div>
 </template>
 
 <script>
-
 export default {
   loading: {
     color: 'blue'

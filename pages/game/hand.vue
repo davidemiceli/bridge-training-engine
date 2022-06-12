@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto text-gray-800">
         <AlertModal ref="alertModal" />
-        <p class="text-4xl font-bold mb-6 text-center">New Game</p>
+        <p class="text-4xl font-bold mb-6 text-center">New Hand</p>
         <div class="space-y-2">
             <p class="text-lg font-bold leading-6">Random hands by custom rules</p>
             <div class="flex">
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import GameHelpers from '@/libs/gameHelpers';
 import Rule from '@/libs/rules/rules';
 import RuleExamples from '@/libs/rules/examples';
@@ -58,6 +59,7 @@ import FileHandler from '@/libs/fileHandler';
 
 export default {
     layout: 'play',
+    middleware: ['tableNotCreated'],
     data: function() {
         return {
             showCards: true,
@@ -86,7 +88,7 @@ export default {
         async newRule() {
             this.rule = this.cleanRuleStr(this.rule);
             this.cleanCustomCardDeck();
-            const { rule, gameCustoms } = this;
+            const { rule } = this;
             this.$nuxt.$loading.start();
             try {
                 gameCustoms.cards = await Rule.translate(rule);
@@ -99,10 +101,6 @@ export default {
                 return;
             }
             this.$nuxt.$loading.finish();
-            const topPlayer = GameHelpers.getTopTeamPlayer(gameCustoms.cards);
-            for (const p in gameCustoms.players) gameCustoms.players[p].show_cards = "no";
-            gameCustoms.players[topPlayer].show_cards = "yes";
-            gameCustoms.display_cards_top_team = false;
         },
         cardsToRule() {
             const { cards } = this.gameCustoms;
@@ -118,10 +116,6 @@ export default {
             this.cleanCustomCardDeck();
             const { gameCustoms } = this;
             gameCustoms.cards = GameHelpers.randomCardDeck();
-            const topPlayer = GameHelpers.getTopTeamPlayer(gameCustoms.cards);
-            for (const p in gameCustoms.players) gameCustoms.players[p].show_cards = "no";
-            gameCustoms.players[topPlayer].show_cards = "yes";
-            gameCustoms.display_cards_top_team = false;
         },
         downloadCardDeck() {
             const data = JSON.stringify(this.gameCustoms.cards, null, 4);
@@ -168,9 +162,29 @@ export default {
         loadSavedGameTrigger() {
             this.$refs.fileGameInput.click();
         },
+        async updateTable(username, player, embodyRules) {
+            const data = [{username, players: [player], role: 'player', embodyRules}];
+            await this.$store.dispatch('table/reset');
+            await this.$store.dispatch('table/addPlayers', data);
+            await this.$store.dispatch('table/new', username);
+        },
+        async applyGameCustoms() {
+            const { gameCustoms } = this;
+            const { username } = this.settings;
+            const userSettings = (this.table.players && this.table.players[username]) || {};
+            const embodyRules = (userSettings && userSettings.embodyRules) || {};
+            if (embodyRules && embodyRules.randomPlayer) {
+                const player = GameHelpers.getRandomPlayerId();
+                await this.updateTable(username, player, embodyRules);
+            } else if (embodyRules && embodyRules.topTeam) {
+                const player = GameHelpers.getTopTeamPlayer(gameCustoms.cards);
+                await this.updateTable(username, player, embodyRules);
+            }
+        },
         async createNewGame() {
             if (this.gameCustoms.cards.length == 0) this.createRandomCardDeck();
             try {
+                await this.applyGameCustoms();
                 await this.$store.dispatch('game/newGame', this.gameCustoms);
             } catch(err) {
                 console.log(err);
@@ -185,6 +199,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            settings: 'settings/all',
+            table: 'table/all'
+        }),
         customPlayerCards() {
             const { cards } = this.gameCustoms;
             const [team_id, points] = GameHelpers.getTopTeamByPoints(cards);
@@ -201,6 +219,11 @@ export default {
         existingCustomCards() {
             return this.customPlayerCards.reduce((acc, p) => acc + p.card_deck.length, 0) > 0;
         }
+    },
+    async mounted() {
+        await this.$store.dispatch('settings/get');
+        await this.$store.dispatch('table/get');
+        return;
     }
 }
 </script>
