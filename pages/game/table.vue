@@ -14,11 +14,6 @@
                             v-bind:class="[tabs.training ? 'text-sky-800 border-sky-800 active' : 'border-transparent hover:text-gray-800 border-gray-300']">
                             <span class="material-icons-outlined mr-1">psychology</span>Training</span>
                         </li>
-                        <!-- <li>
-                            <span @click="setTab('multiplayer')" class="inline-flex p-4 rounded-t-lg border-b-2 cursor-pointer"
-                            v-bind:class="[tabs.multiplayer ? 'text-sky-800 border-sky-800 active' : 'border-transparent hover:text-gray-800 border-gray-300']">
-                            <span class="material-icons-outlined mr-1">supervisor_account</span>Multiplayer</span>
-                        </li> -->
                     </ul>
                 </div>
 
@@ -34,16 +29,22 @@
                     <p class="text-2xl font-bold text-center">Play against the AI and/or yourself</p>
                     <p class="text-base font-bold text-center">Choose one or more players to embody</p>
                     <div class="flex justify-center">
-                        <div class="inline-flex items-center mr-4" v-for="p in players" :key=p>
-                            <input type="checkbox" :checked='selectedPlayers.includes(p)' @change='togglePlayers($event, p)' class="w-4 h-4 bg-gray-100 rounded border-gray-300">
-                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900">{{p}}</label>
+                        <div class="inline-flex mr-4" v-for="p in players" :key=p>
+                            <div class="ml-2 flex items-center text-sm font-medium cursor-pointer" v-bind:class="[selectedPlayers.includes(p) ? 'text-sky-700' : 'text-gray-800']" @click='togglePlayers(p)'>
+                                <span v-if="selectedPlayers.includes(p)" class="material-icons-outlined">radio_button_checked</span>
+                                <span v-if="!selectedPlayers.includes(p)" class="material-icons-outlined">radio_button_unchecked</span>
+                                <span class="ml-1 uppercase font-bold">{{p}}</span>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-base font-bold text-center">Choose an embody rule<br />(it will overwrite the choosen player)</p>
+                    <p class="text-base font-bold text-center">Choose an embody rule<br /><span class="italic">(it will overwrite the choosen player)</span></p>
                     <div class="flex justify-center">
-                        <div class="inline-flex items-center mr-4" v-for="k in playerEmbodyRules" :key=k.value>
-                            <input type="checkbox" :checked='k.value == embodyRule' @change='toggleEmbodyRule($event, k.value)' class="w-4 h-4 bg-gray-100 rounded border-gray-300">
-                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900">{{k.text}}</label>
+                        <div class="inline-flex mr-4" v-for="k in playerEmbodyRules" :key=k.value>
+                            <div class="ml-2 flex items-center text-sm font-medium cursor-pointer" v-bind:class="[k.value == embodyRule ? 'text-sky-700' : 'text-gray-800']" @click='toggleEmbodyRule(k.value)'>
+                                <span v-if='k.value == embodyRule' class="material-icons-outlined">radio_button_checked</span>
+                                <span v-if='k.value != embodyRule' class="material-icons-outlined">radio_button_unchecked</span>
+                                <span class="ml-1 uppercase font-bold">{{k.text}}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="text-center">
@@ -124,8 +125,7 @@ export default {
         const players = GameHelpers.players();
         const roles = ['player', 'watcher', 'teacher'];
         return {
-            tabs: {training: true},
-            // tabs: {training: true, multiplayer: false},
+            tabs: {training: true}, // multiplayer: false},
             username: '',
             updatePlayersIndex: null,
             players: players,
@@ -146,13 +146,12 @@ export default {
             Object.keys(this.tabs).forEach(n => { this.tabs[n] = false; });
             this.tabs[name] = true;
         },
-        togglePlayers(e, p) {
-            if (e.target.checked && !this.selectedPlayers.includes(p)) this.selectedPlayers.push(p);
+        togglePlayers(p) {
+            if (!this.selectedPlayers.includes(p)) this.selectedPlayers.push(p);
             else this.selectedPlayers = this.selectedPlayers.filter(pl => pl != p);
         },
-        toggleEmbodyRule(e, k) {
-            if (e.target.checked) this.embodyRule = k;
-            else this.embodyRule = null;
+        toggleEmbodyRule(k) {
+            this.embodyRule = this.embodyRule == k ? null : k;
         },
         async setUsername(o) {
             this.$nuxt.$loading.start();
