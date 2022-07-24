@@ -143,7 +143,7 @@ export default {
                 taskPlayOpts.title = 'Auto play';
                 taskPlayOpts.steps = this.gameState.tricks.length;
                 taskPlayOpts.active = true;
-                if (!contractWasDefined) this.autoContract();
+                if (!contractWasDefined) await this.autoContract();
                 while(true) {
                     await this.play({auto: true});
                     await GameHelpers.delay(200);

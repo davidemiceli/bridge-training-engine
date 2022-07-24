@@ -153,8 +153,8 @@ export default new class {
             this.setDummyPlayer(contract, players);
             return s;
         }
-        // Auto play
-        if (auto) player_bid = PlayEngine.autoBid(player, players, s.bids);
+        // TODO: Auto play
+        // if (auto) player_bid = PlayEngine.autoBid(player, players, s.bids);
         if (!player_bid) return s;
         // Get next player in the hand loop and propose a bid
         const proposed = this.newBid(player, player_bid);
