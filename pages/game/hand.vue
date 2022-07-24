@@ -91,7 +91,7 @@ export default {
             const { rule } = this;
             this.$nuxt.$loading.start();
             try {
-                gameCustoms.cards = await Rule.translate(rule);
+                this.gameCustoms.cards = await Rule.translate(rule);
             } catch(err) {
                 this.$nuxt.$loading.finish();
                 console.error(err);
