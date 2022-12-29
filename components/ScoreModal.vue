@@ -46,7 +46,7 @@
                 </table>
 
                 <div class="mt-4 text-right space-x-2">
-                    <NuxtLink to="" class="rounded-md shadow hover:shadow-md capitalize font-bold text-base py-2 px-4 bg-gray-100 text-gray-700" @click.native="onClickClose()">Close</NuxtLink>
+                    <NuxtLink to="" class="cursor-pointer rounded-md shadow hover:shadow-md capitalize font-bold text-base py-2 px-4 bg-gray-100 text-gray-700" @click.native="onClickClose()">Close</NuxtLink>
                     <NuxtLink to="/game/hand" class="rounded-md shadow hover:shadow-md capitalize font-bold text-base py-2 px-4 bg-emerald-500 text-white">New game</NuxtLink>
                 </div>
             </div>

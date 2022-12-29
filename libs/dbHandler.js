@@ -1,4 +1,6 @@
 
+const dbStorage = ((typeof(window) !== 'undefined') && window.localStorage) || {getItem: function(k) { return this[k]; }, setItem: function(k) { return this[k]; } };
+
 export default new class {
 
     constructor() {
@@ -8,29 +10,29 @@ export default new class {
     }
 
     storeSettings(data) {
-        localStorage.setItem(this.storeSettingsKey, JSON.stringify(data));
+        dbStorage.setItem(this.storeSettingsKey, JSON.stringify(data));
     }
 
     getSettings() {
-        const data = localStorage.getItem(this.storeSettingsKey);
+        const data = dbStorage.getItem(this.storeSettingsKey);
         return data ? JSON.parse(data) : {};
     }
 
     storeTable(data) {
-        localStorage.setItem(this.storeTableKey, JSON.stringify(data));
+        dbStorage.setItem(this.storeTableKey, JSON.stringify(data));
     }
 
     getTable() {
-        const data = localStorage.getItem(this.storeTableKey);
+        const data = dbStorage.getItem(this.storeTableKey);
         return data ? JSON.parse(data) : {};
     }
 
     storeGameState(data) {
-        localStorage.setItem(this.storeGameKey, JSON.stringify(data));
+        dbStorage.setItem(this.storeGameKey, JSON.stringify(data));
     }
 
     getGameState() {
-        const data = localStorage.getItem(this.storeGameKey);
+        const data = dbStorage.getItem(this.storeGameKey);
         return JSON.parse(data);
     }
 

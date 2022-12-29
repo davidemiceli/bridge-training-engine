@@ -1,5 +1,5 @@
 import jsep from 'jsep';
-import { sum } from 'lodash';
+import sum from 'lodash/sum';
 import GameHelpers from '@/libs/gameHelpers';
 import HandGenerator from '@/libs/rules/handGenerator';
 import RuleError from '@/libs/rules/errors';

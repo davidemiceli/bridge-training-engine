@@ -25,8 +25,9 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     methods: {
         onClickClose() {
             this.$emit('onClickClose');
@@ -36,5 +37,5 @@ export default {
             return this.$router.push({path: urlPath});
         }
     }
-}
+});
 </script>

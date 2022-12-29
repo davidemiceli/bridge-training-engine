@@ -21,18 +21,18 @@
 </template>
 
 <script>
+definePageMeta({
+  layout: "textual",
+});
+
 export default {
-    layout: 'textual',
-    data: function() {
-        return {
-            amts: [10, 20, 50, 100, 500]
-        }
-    },
-    methods: {
-        selectAmount(a) {
+    setup() {
+        const amts = [10, 20, 50, 100, 500];
+        const selectAmount = a => {
             const href = `https://www.paypal.com/donate/?business=BRMDA5LUN5QB6&no_recurring=0&currency_code=EUR&amount=${a}&recurring_payment=Y&item_number=Donation%20to%20support%20Bridge%20Training%20Engine`;
             window.open(href, '_blank');
         }
+        return { amts, selectAmount };
     }
 }
 </script>

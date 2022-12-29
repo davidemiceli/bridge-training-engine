@@ -10,13 +10,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useGameStore } from '@/store/game';
 import GameHelpers from '@/libs/gameHelpers';
 
 
+definePageMeta({
+  layout: 'play',
+  middleware: ['table-not-created', 'game-not-created']
+});
+
 export default {
-    layout: 'play',
-    middleware: ['tableNotCreated', 'gameNotCreated'],
     methods: {
         playersData(playerId) {
             const p = GameHelpers.getPlayer(this.players, playerId);
@@ -34,11 +38,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            timerClock: 'game/timerClock',
-            gameState: 'game/all',
-            tricks: 'game/tricks',
-            players: 'game/players'
+        ...mapState(useGameStore, {
+            timerClock: store => store.timerClock,
+            gameState: store => store.all,
+            tricks: store => store.tricks,
+            players: store => store.players
         }),
         contract() {
             return this.gameState.contract;

@@ -1,14 +1,17 @@
+import { useGameStore } from '@/store/game';
 
 
-export default async function({app, store, redirect}) {
+export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
-        await store.dispatch('game/getGame');
-        const gameNotCreated = store.getters['game/notCreated'];
-        if (gameNotCreated) redirect({path: '/game/hand'});
+        const gameStore = useGameStore();
+        await gameStore.getGame();
+        const gameNotCreated = gameStore.notCreated;
+        if (gameNotCreated) navigateTo({path: '/game/hand'});
     } catch(err) {
         console.error(err);
-        redirect({path: '/game/hand'});
+        navigateTo({path: '/game/hand'});
     } finally {
         return;
     }
-}
+});
+

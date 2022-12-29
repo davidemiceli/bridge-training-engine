@@ -1,35 +1,29 @@
+import { defineStore } from 'pinia';
 import GameAPIs from '@/services/gameAPIs';
 
 
-// Game state store
-export const state = () => ({
-    data: {}
+// Settings state store
+export const useSettingsStore = defineStore('settings', {
+    state: () => ({
+        data: {}
+    }),
+    actions: {
+        async get() {
+            const data = await GameAPIs.getSettings();
+            this.data = data;
+            return;
+        },
+        async update(params) {
+            const data = await GameAPIs.updateSettings(params);
+            this.data = data;
+            return;
+        }
+    }, getters: {
+        all(state) {
+            return state.data;
+        }
+    }
 });
-
-export const mutations = {
-    UPDATE(state, { item }) {
-        state.data = item;
-    }
-};
-
-export const actions = {
-    async get(ctx) {
-        const data = await GameAPIs.getSettings();
-        ctx.commit('UPDATE', {item: data});
-        return;
-    },
-    async update(ctx, params) {
-        const data = await GameAPIs.updateSettings(params);
-        ctx.commit('UPDATE', {item: data});
-        return;
-    }
-};
-
-export const getters = {
-    all(state) {
-        return state.data;
-    }
-};
 
 /* Use in components in this way:
 this.$store.dispatch('settings/updateSettings', item);

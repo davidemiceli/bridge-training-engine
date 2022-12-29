@@ -5,19 +5,21 @@
 </template>
 
 <script>
-  export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     data: () => ({
-      loading: false
+        loading: false
     }),
     methods: {
-      start() {
-        this.loading = true
-      },
-      finish() {
-        this.loading = false
-      }
+        start() {
+            this.loading = true
+        },
+        finish() {
+            this.loading = false
+        }
     }
-  }
+});
 </script>
 
 <style scoped>

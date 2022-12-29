@@ -1,14 +1,19 @@
+import { useSettingsStore } from '@/store/settings';
+import { useTableStore } from '@/store/table';
 
 
-export default async function({app, store, redirect}) {
+export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
-        await store.dispatch('settings/get');
-        await store.dispatch('table/get');
-        const tableNotCreated = store.getters['table/notCreated'];
-        if (tableNotCreated) return redirect({path: '/game/table'});
+        const settingsStore = useSettingsStore();
+        const tableStore = useTableStore();
+        await settingsStore.get();
+        await tableStore.get();
+        const tableNotCreated = tableStore.notCreated;
+        if (tableNotCreated) return navigateTo({path: '/game/table'});
     } catch(err) {
         console.error(err);
-        redirect({path: '/game/table'});
+        // return abortNavigation(err);
+        navigateTo({path: '/game/table'});
     }
     return;
-}
+});

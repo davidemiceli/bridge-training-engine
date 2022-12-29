@@ -14,46 +14,44 @@
 
 - Node.js v16.14+
 
-### Run application
+### Setup
 
-To start the application, run:
+Make sure to install the dependencies:
 
-```shell
-# Install FE JavaScript requirements
+```bash
 npm install
-# Build FE application
-npm run generate
-# Run server application
+npm install --save pinia @pinia/nuxt --legacy-peer-deps
+```
+
+### Development Server
+
+Start the development server on http://localhost:3000
+
+```bash
 npm run dev
 ```
 
-Then open the url http://localhost:3000 on browser.
+### Production
 
-### Development
-
-For frontend application development, follow the commands below.
+Build the application for production:
 
 ```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+npm run build
 ```
+
+Locally preview production build:
+
+```bash
+npm run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
 ### Testing
 
 To test core application functions, there are unit tests.
 
 ```bash
-# run unit tests
 $ npm run test
 ```
 

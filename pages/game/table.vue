@@ -114,17 +114,23 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { useSettingsStore } from '@/store/settings';
+import { useTableStore } from '@/store/table';
 import GameError from '@/libs/errors';
 import GameHelpers from '@/libs/gameHelpers';
 
 
+definePageMeta({
+  layout: 'play',
+});
+
 export default {
-    layout: 'play',
     data: function() {
         const players = GameHelpers.players();
         const roles = ['player', 'watcher', 'teacher'];
         return {
+            settings: {},
+            table: {},
             tabs: {training: true}, // multiplayer: false},
             username: '',
             updatePlayersIndex: null,
@@ -154,38 +160,41 @@ export default {
             this.embodyRule = this.embodyRule == k ? null : k;
         },
         async setUsername(o) {
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 const len = o.length;
                 if (len > 16 || len < 6) throw new GameError('Username must have between 6 and 16 characters.');
                 const settings = Object.assign({}, this.settings, {username: o});
-                await this.$store.dispatch('settings/update', settings);
+                const settingsStore = useSettingsStore();
+                await settingsStore.update(settings);
+                console.log('quiii', o);
             } catch(err) {
-                this.$nuxt.$loading.finish();
+                // this.$nuxt.$loading.finish();
                 console.error(err);
                 const message = (err.name == 'GameError') ? err.message : 'Internal Server Error.';
                 GameHelpers.showError(message, this.$refs.alertModal);
                 return;
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return;
         },
         async newTable(tableType) {
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 const { username } = this.settings;
                 if (!username) throw new GameError('Missing username. Please enter a valid username.');
                 if (tableType == 'training') await this.trainingTable();
-                await this.$store.dispatch('table/new', username);
+                const tableStore = useTableStore();
+                await tableStore.new(username);
                 this.$router.push({path: '/game/hand'});
             } catch(err) {
-                this.$nuxt.$loading.finish();
+                // this.$nuxt.$loading.finish();
                 console.error(err);
                 const message = (err.name == 'GameError') ? err.message : 'Internal Server Error.';
                 GameHelpers.showError(message, this.$refs.alertModal);
                 return;
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return;
         },
         async trainingTable() {
@@ -198,27 +207,29 @@ export default {
                 username, players: choosenPlayers, role: 'player',
                 embodyRules: playerEmbodyRules
             }];
-            await this.$store.dispatch('table/reset');
-            await this.$store.dispatch('table/addPlayers', data);
+            const tableStore = useTableStore();
+            await tableStore.reset();
+            await tableStore.addPlayers(data);
             return;
         },
         async addPlayers() {
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 const { selectedPlayers, role } = this;
                 this.userNames = this.userNames.trim().replace(/\s/g, '');
                 const userNames = this.userNames.split(',');
                 const players = selectedPlayers || [];
                 const data = userNames.map(u => ({username: u, players, role}));
-                await this.$store.dispatch('table/addPlayers', data);
+                const tableStore = useTableStore();
+                await tableStore.addPlayers(data);
             } catch(err) {
-                this.$nuxt.$loading.finish();
+                // this.$nuxt.$loading.finish();
                 console.error(err);
                 const message = (err.name == 'GameError') ? err.message : 'Internal Server Error.';
                 GameHelpers.showError(message, this.$refs.alertModal);
                 return;
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return;
         },
         async updatePlayers(username) {
@@ -238,20 +249,23 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            settings: 'settings/all',
-            table: 'table/all'
-        }),
+        // ...mapState(useSettingsStore, {
+        //     username: store => store.all.username
+        // }),
+        // ...mapState(useTableStore, {table: 'all'}),
         tablePlayers() {
             const { table } = this;
             return table && table.players ? Object.values(table.players) : [];
         }
     },
     async mounted() {
-        await this.$store.dispatch('settings/get');
-        await this.$store.dispatch('table/get');
-        this.username = this.settings.username || '';
-        const table = this.$store.getters['table/all'];
+        const settingsStore = useSettingsStore();
+        const tableStore = useTableStore();
+        await settingsStore.get();
+        await tableStore.get();
+        this.settings = settingsStore.all;
+        this.username = settingsStore.all.username || '';
+        this.table = tableStore.all;
         return;
     }
 }

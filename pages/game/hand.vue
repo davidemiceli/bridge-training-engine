@@ -50,16 +50,22 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
+import { useTableStore } from '@/store/table';
+import { useGameStore } from '@/store/game';
 import GameHelpers from '@/libs/gameHelpers';
 import Rule from '@/libs/rules/rules';
 import RuleExamples from '@/libs/rules/examples';
 import FileHandler from '@/libs/fileHandler';
 
 
+definePageMeta({
+  layout: 'play',
+  middleware: ['table-not-created']
+});
+
 export default {
-    layout: 'play',
-    middleware: ['tableNotCreated'],
     data: function() {
         return {
             showCards: true,
@@ -89,18 +95,18 @@ export default {
             this.rule = this.cleanRuleStr(this.rule);
             this.cleanCustomCardDeck();
             const { rule } = this;
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 this.gameCustoms.cards = await Rule.translate(rule);
             } catch(err) {
-                this.$nuxt.$loading.finish();
+                // this.$nuxt.$loading.finish();
                 console.error(err);
                 console.log(err)
                 const message = (err.name == 'RuleError') ? err.message : 'Invalid rule.';
                 GameHelpers.showError(message, this.$refs.alertModal);
                 return;
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
         },
         cardsToRule() {
             const { cards } = this.gameCustoms;
@@ -149,7 +155,8 @@ export default {
                 try {
                     const uploadedGame = JSON.parse(data);
                     if (!(uploadedGame && uploadedGame.version)) throw Error('Invalid game file.');
-                    await this.$store.dispatch('game/loadGame', uploadedGame);
+                    const gameStore = useGameStore();
+                    await gameStore.loadGame(uploadedGame);
                 } catch(err) {
                     console.log(err);
                     GameHelpers.showError(err, this.$refs.alertModal);
@@ -164,9 +171,10 @@ export default {
         },
         async updateTable(username, player, embodyRules) {
             const data = [{username, players: [player], role: 'player', embodyRules}];
-            await this.$store.dispatch('table/reset');
-            await this.$store.dispatch('table/addPlayers', data);
-            await this.$store.dispatch('table/new', username);
+            const tableStore = useTableStore();
+            await tableStore.reset();
+            await tableStore.addPlayers(data);
+            await tableStore.new(username);
         },
         async applyGameCustoms() {
             const { gameCustoms } = this;
@@ -185,7 +193,8 @@ export default {
             if (this.gameCustoms.cards.length == 0) this.createRandomCardDeck();
             try {
                 await this.applyGameCustoms();
-                await this.$store.dispatch('game/newGame', this.gameCustoms);
+                const gameStore = useGameStore();
+                await gameStore.newGame(this.gameCustoms);
             } catch(err) {
                 console.log(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
@@ -199,10 +208,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            settings: 'settings/all',
-            table: 'table/all'
+        ...mapState(useSettingsStore, {
+            username: store => store.all.username,
+            settings: store => store.all
         }),
+        ...mapState(useTableStore, {table: 'all'}),
         customPlayerCards() {
             const { cards } = this.gameCustoms;
             const [team_id, points] = GameHelpers.getTopTeamByPoints(cards);
@@ -221,8 +231,10 @@ export default {
         }
     },
     async mounted() {
-        await this.$store.dispatch('settings/get');
-        await this.$store.dispatch('table/get');
+        const settingsStore = useSettingsStore();
+        const tableStore = useTableStore();
+        await settingsStore.get();
+        await tableStore.get();
         return;
     }
 }

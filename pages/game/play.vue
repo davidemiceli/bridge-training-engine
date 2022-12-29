@@ -1,7 +1,7 @@
 <template>
     <div>
         <AlertModal ref="alertModal" />
-        <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.donePerc @cancelClicked='taskPlayOpts.cancel = true' />
+        <PlayTaskModal :taskName=taskPlayOpts.title :isActive=taskPlayOpts.active :doneSteps=taskPlayOpts.steps :donePerc=taskPlayOpts.donePerc @cancelClicked='taskPlayOpts.cancel = true; taskPlayOpts.active = false' />
         <ScoreModal :score=gameState.score :contract=gameState.contract @onClickClose="scoreModalToggle" v-if="handEnded && scoreModalOpen" />
 
         <div class="container mx-auto text-gray-800 mb-8 border-b border-b-gray-200 divide-y divide-gray-200">
@@ -46,13 +46,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
+import { useTableStore } from '@/store/table';
+import { useGameStore } from '@/store/game';
 import GameHelpers from '@/libs/gameHelpers';
 
+definePageMeta({
+  layout: 'play',
+  middleware: ['table-not-created', 'game-not-created']
+});
 
 export default {
-    layout: 'play',
-    middleware: ['tableNotCreated', 'gameNotCreated'],
     data() {
         return {
             scoreModalOpen: true,
@@ -62,15 +67,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            incrementTimerClock: 'game/incrementTimerClock',
-            updateTimerClock: 'game/updateTimerClock',
-            applyUiPlayOptions: 'game/applyUiPlayOptions',
-            saveGame: 'game/saveGame',
-            autoContract: 'game/autoContract',
-            play: 'game/play',
-            undo: 'game/undo'
-        }),
+        ...mapActions(useGameStore, [
+            'incrementTimerClock', 'updateTimerClock', 'applyUiPlayOptions',
+            'saveGame', 'autoContract', 'play', 'undo'
+        ]),
         async playBid(bid) {
             await this.playNext(null, bid);
             return true;
@@ -95,25 +95,25 @@ export default {
                 if (card_of_loop_suit.length > 0) return this.showAlert(`Player ${card.player_id} cannot play ${card.suit} cards having ${loop_suit} cards yet!`);
             }
             // Play card
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 await this.play({card, bid});
             } catch(err) {
                 console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return true;
         },
         async playAuto() {
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             try {
                 await this.play({auto: true});
             } catch(err) {
                 console.error(err);
                 GameHelpers.showError(err, this.$refs.alertModal);
             }
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return true;
         },
         async playUndoAll() {
@@ -170,10 +170,10 @@ export default {
         },
         async playUndo(e) {
             // Undo last played card
-            this.$nuxt.$loading.start();
+            // this.$nuxt.$loading.start();
             await this.undo({steps: 1});
             this.scoreModalToggle();
-            this.$nuxt.$loading.finish();
+            // this.$nuxt.$loading.finish();
             return true;
         },
         scoreModalToggle() {
@@ -237,16 +237,20 @@ export default {
         getPlayerCards: GameHelpers.getPlayerCards
     },
     computed: {
-        ...mapGetters({
-            settings: 'settings/all',
-            table: 'table/all',
-            timerClock: 'game/timerClock',
-            gameState: 'game/all',
-            gameNotCreated: 'game/notCreated',
-            players: 'game/players',
-            playedCards: 'game/playedCards',
-            bids: 'game/bids',
-            handEnded: 'game/handEnded'
+        ...mapState(useSettingsStore, {
+            settings: store => store.all
+        }),
+        ...mapState(useTableStore, {
+            table: store => store.all
+        }),
+        ...mapState(useGameStore, {
+            timerClock: store => store.timerClock,
+            gameState: store => store.all,
+            gameNotCreated: store => store.notCreated,
+            players: store => store.players,
+            playedCards: store => store.playedCards,
+            bids: store => store.bids,
+            handEnded: store => store.handEnded
         }),
         uiPlayOptions() {
             const { gameState } = this;
@@ -272,10 +276,11 @@ export default {
     async mounted() {
         this.intervalTimerClock = setInterval(() => {
             this.incrementTimerClock();
-            this.$forceUpdate();
         }, 1000);
-        await this.$store.dispatch('settings/get');
-        await this.$store.dispatch('table/get');
+        const settingsStore = useSettingsStore();
+        const tableStore = useTableStore();
+        await settingsStore.get();
+        await tableStore.get();
         return;
     },
     beforeDestroy() {

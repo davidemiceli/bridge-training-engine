@@ -15,13 +15,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useGameStore } from '@/store/game';
 import FileHandler from '@/libs/fileHandler';
 
 
+definePageMeta({
+  layout: 'play',
+  middleware: ['table-not-created', 'game-not-created']
+});
+
 export default {
-    layout: 'play',
-    middleware: ['tableNotCreated', 'gameNotCreated'],
     methods: {
         downloadCardDeck() {
             const data = JSON.stringify(this.fullCardDeck, null, 4);
@@ -29,8 +33,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            players: 'game/players'
+        ...mapState(useGameStore, {
+            players: store => store.players
         }),
         fullCardDeck() {
             const { players } = this;

@@ -95,15 +95,14 @@
 </template>
 
 <script>
+definePageMeta({
+    layout: "textual",
+});
 
 export default {
-    layout: 'textual',
-    data: function() {
-        return {
-            sections: [
-                'Hand Editor Rules'
-            ]
-        }
+    setup() {
+        const sections = ['Hand Editor Rules'];
+        return { sections };
     }
 }
 </script>

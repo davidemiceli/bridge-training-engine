@@ -1,4 +1,6 @@
-import { sum, sampleSize, random } from 'lodash';
+import sum from 'lodash/sum';
+import sampleSize from 'lodash/sampleSize';
+import random from 'lodash/random';
 import GameHelpers from '@/libs/gameHelpers';
 
 

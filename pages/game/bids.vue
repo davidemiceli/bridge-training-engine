@@ -44,13 +44,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia';
+import { useGameStore } from '@/store/game';
 import GameHelpers from '@/libs/gameHelpers';
 
+definePageMeta({
+  layout: 'play',
+  middleware: ['table-not-created', 'game-not-created']
+});
 
 export default {
-    layout: 'play',
-    middleware: ['tableNotCreated', 'gameNotCreated'],
     methods: {
         isNormalBid(value) {
             return ['pass', 'double', 'redouble'].indexOf(value) === -1;
@@ -67,8 +70,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            bids: 'game/bids'
+        ...mapState(useGameStore, {
+            bids: store => store.bids
         }),
         bidList() {
             return this.bids.map(b => Object.assign({name: {suit: b.trump, value: b.id.split(' ')[0], card_id: b.id}}, b));

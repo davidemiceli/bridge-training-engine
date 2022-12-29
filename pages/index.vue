@@ -29,18 +29,19 @@
 </template>
 
 <script>
+definePageMeta({
+  layout: "landing",
+});
 
 export default {
-    layout: 'landing',
-    data: function() {
-        return {
-            features: [
-                {title: 'For Training and Experimentation', description: 'Test your play on a certain type of hands. Re-Play hands or their variations. Practice with biddings. Experiment and Design new conventions.'},
-                {title: 'Play alone or with AI', description: 'Play against the AI and/or yourself, step-by-step for every single card to play. A Double Dummy AI will try to emulate as closely as possible an human player.'},
-                {title: 'Hand Editor', description: 'UI to generate custom hands automatically or semi-automatically, export them or load existing ones. A meta language is provided to place constraints on the random generation of hands.'},
-                {title: 'Game Analysis', description: 'Analyze the game with statistics and a simple UI. An automatic explanation of your play, for each trick, is provided.'}
-            ]
-        }
+    setup() {
+        const features = [
+            {title: 'For Training and Experimentation', description: 'Test your play on a certain type of hands. Re-Play hands or their variations. Practice with biddings. Experiment and Design new conventions.'},
+            {title: 'Play alone or with AI', description: 'Play against the AI and/or yourself, step-by-step for every single card to play. A Double Dummy AI will try to emulate as closely as possible an human player.'},
+            {title: 'Hand Editor', description: 'UI to generate custom hands automatically or semi-automatically, export them or load existing ones. A meta language is provided to place constraints on the random generation of hands.'},
+            {title: 'Game Analysis', description: 'Analyze the game with statistics and a simple UI. An automatic explanation of your play, for each trick, is provided.'}
+        ];
+        return { features };
     }
 }
 </script>

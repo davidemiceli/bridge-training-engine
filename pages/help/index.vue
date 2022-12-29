@@ -17,38 +17,40 @@
 </template>
 
 <script>
+definePageMeta({
+    layout: "textual",
+});
+
 export default {
-    layout: 'textual',
-    data: function() {
-        return {
-            sections: [
-                {
-                    name: 'Table',
-                    subsections: [
-                        {name: 'New Table', url: 'table'}
-                    ]
-                },
-                {
-                    name: 'Hand',
-                    subsections: [
-                        {name: 'New Hand', url: 'newhand'},
-                        {name: 'Hand Editor Rules', url: 'rules'}
-                    ]
-                },
-                {
-                    name: 'Play',
-                    subsections: [
-                        {name: 'Play', url: 'play'}
-                    ]
-                },
-                {
-                    name: 'Analysis',
-                    subsections: [
-                        {name: 'Analysis', url: 'analysis'}
-                    ]
-                }
-            ]
-        }
+    setup() {
+        const sections = [
+            {
+                name: 'Table',
+                subsections: [
+                    {name: 'New Table', url: 'table'}
+                ]
+            },
+            {
+                name: 'Hand',
+                subsections: [
+                    {name: 'New Hand', url: 'newhand'},
+                    {name: 'Hand Editor Rules', url: 'rules'}
+                ]
+            },
+            {
+                name: 'Play',
+                subsections: [
+                    {name: 'Play', url: 'play'}
+                ]
+            },
+            {
+                name: 'Analysis',
+                subsections: [
+                    {name: 'Analysis', url: 'analysis'}
+                ]
+            }
+        ]
+        return { sections };
     }
 }
 </script>

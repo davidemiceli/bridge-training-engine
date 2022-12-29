@@ -31,7 +31,6 @@ export default {
     },
     methods: {
         cancelClicked() {
-            this.isActive = false;
             this.$emit('cancelClicked');
         }
     },

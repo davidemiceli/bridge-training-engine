@@ -5,7 +5,7 @@
             <div class="flex items-center flex-wrap sm:flex-nowrap">
                 <NuxtLink to="/" class="flex-none text-gray-900">
                     <span class="sr-only">Bridge Training Engine</span>
-                    <img src="logo.png" height="14"><!-- perfect height 28px -->
+                    <img :src="baseURL + '/logo.png'" style="height: 14px;"><!-- perfect height 28px -->
                 </NuxtLink>
                 <div class="hidden lg:flex w-full flex-none w-auto ml-auto flex items-center">
                     <div class="font-mono text-xs font-bold align-middle">v{{version}}</div>
@@ -36,21 +36,19 @@
 </template>
 
 <script>
+import { defineComponent, ref } from 'vue';
 
-export default {
+export default defineComponent({
     props: {
         withMenu: Boolean
     },
-    data() {
-        return {
-            version: this.$config.appVersion,
-            menu: false
-        }
-    },
-    methods: {
-        showMenu(v) {
-            this.menu = Boolean(v);
-        }
+    setup(props) {
+        const config = useRuntimeConfig();
+        const { baseURL } = config.public;
+        const version = config.public.appVersion;
+        const menu = ref(false);
+        const showMenu = v => menu.value = Boolean(v);
+        return {baseURL, version, menu, showMenu};
     }
-}
+});
 </script>
